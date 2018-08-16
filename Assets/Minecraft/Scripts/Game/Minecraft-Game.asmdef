@@ -4,7 +4,8 @@
         "Minecraft-Entities",
         "Minecraft-Input",
         "Minecraft-Utility",
-        "Cinemachine"
+        "Cinemachine",
+        "Minecraft-World"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

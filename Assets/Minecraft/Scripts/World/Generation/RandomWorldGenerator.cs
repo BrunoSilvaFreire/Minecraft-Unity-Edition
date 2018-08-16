@@ -9,7 +9,7 @@ namespace Minecraft.Scripts.World.Generation {
             for (byte x = 0; x < world.ChunkSize; x++) {
                 for (byte y = 0; y < world.ChunkHeight; y++) {
                     for (byte z = 0; z < world.ChunkSize; z++) {
-                        var mat = (RandomUtility.NextBool() ? Blocks.Stone : Blocks.Air).Material;
+                        var mat = (RandomUtility.NextBool() ? Blocks.Blocks.Stone : Blocks.Blocks.Air).Material;
                         data[x, y, z] = mat;
                     }
                 }

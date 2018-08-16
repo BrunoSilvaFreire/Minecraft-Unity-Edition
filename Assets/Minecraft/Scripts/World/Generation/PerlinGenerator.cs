@@ -1,5 +1,4 @@
-﻿using Minecraft.Scripts.Utility;
-using Minecraft.Scripts.World.Chunks;
+﻿using Minecraft.Scripts.World.Chunks;
 using UnityEngine;
 
 namespace Minecraft.Scripts.World.Generation {
@@ -18,7 +17,7 @@ namespace Minecraft.Scripts.World.Generation {
                     float pZ = chunkPosition.y * world.ChunkSize + z;
                     var perlin = Mathf.PerlinNoise(pZ / worldSize, pX / worldSize) * PerlinScale;
                     for (byte y = 0; y < world.ChunkHeight; y++) {
-                        data[x, y, z] = (perlin < y ? Blocks.Air : Blocks.Stone).Material;
+                        data[x, y, z] = (perlin < y ? Blocks.Blocks.Air : Blocks.Blocks.Stone).Material;
                     }
                 }
             }

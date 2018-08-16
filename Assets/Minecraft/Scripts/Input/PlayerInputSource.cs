@@ -26,5 +26,9 @@
         public override bool GetJump() {
             return UnityEngine.Input.GetButtonDown(JumpKey);
         }
+
+        public override bool GetLeftMouse() {
+            return UnityEngine.Input.GetMouseButton(0);
+        }
     }
 }

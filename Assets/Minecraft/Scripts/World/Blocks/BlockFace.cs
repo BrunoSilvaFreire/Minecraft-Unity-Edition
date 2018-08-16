@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Minecraft.Scripts.World {
+namespace Minecraft.Scripts.World.Blocks {
     public enum BlockFace {
         Forward,
         Backward,

@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Minecraft.Scripts.World.Blocks;
 using Minecraft.Scripts.World.Chunks;
 using Minecraft.Scripts.World.Generation;
 using UnityEngine;
+using UnityUtilities.Singletons;
 #if UNITY_EDITOR
 using UnityEditor;
 
 #endif
 
 namespace Minecraft.Scripts.World {
-    public class World : MonoBehaviour {
+    public class World : Singleton<World> {
         public byte SpawnSize;
         public byte ChunkSize = 16;
         public byte ChunkHeight = byte.MaxValue;
@@ -18,6 +20,13 @@ namespace Minecraft.Scripts.World {
         public Material ChunkMaterial;
         public bool RandomizeSeed;
         public int Seed;
+        public bool RegenerateOnStart;
+
+        private void Start() {
+            if (RegenerateOnStart) {
+                GenerateSpawn();
+            }
+        }
 
         public BlockMaterial GetBlock(int x, byte y, int z, bool loadIfNotPresent = true) {
             var blockX = (byte) Modulus(x, ChunkSize);
@@ -118,6 +127,46 @@ namespace Minecraft.Scripts.World {
 
         public BlockMaterial GetBlock(Vector3Int pos, bool loadIfNotPresent = true) {
             return GetBlock(pos.x, (byte) pos.y, pos.z, loadIfNotPresent);
+        }
+
+        public void SetBlock(Vector3Int position, BlockMaterial material) {
+            var x = position.x;
+            var y = (byte) position.y;
+            var z = position.z;
+            var blockX = (byte) Modulus(x, ChunkSize);
+            var blockZ = (byte) Modulus(z, ChunkSize);
+            var c = GetChunkAt(x, z, false);
+            if (c == null || y >= ChunkHeight) {
+                if (c == null) { }
+
+                return;
+            }
+
+            c.ChunkData[blockX, y, blockZ] = material;
+            c.GenerateMesh(this);
+            if (blockX == 0) {
+                TryRegenChunk(x - 1, z);
+            }
+
+            if (blockZ == 0) {
+                TryRegenChunk(x, z - 1);
+            }
+
+            if (blockX == ChunkSize - 1) {
+                TryRegenChunk(x + 1, z);
+            }
+
+            if (blockZ == ChunkSize - 1) {
+                TryRegenChunk(x, z + 1);
+            }
+        }
+
+        private void TryRegenChunk(int x, int y) {
+            var c = GetChunkAt(x, y, false);
+            if (c == null) {
+                return;
+            }
+            c.GenerateMesh(this);
         }
     }
 }

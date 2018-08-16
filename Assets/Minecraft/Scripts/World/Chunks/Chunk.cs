@@ -1,5 +1,6 @@
 ﻿using System;
 using Minecraft.Scripts.Utility;
+using Minecraft.Scripts.World.Blocks;
 using UnityEngine;
 using Minecraft.Scripts.World.Utilities;
 
@@ -35,8 +36,8 @@ namespace Minecraft.Scripts.World.Chunks {
         }
 
         private MeshFilter filter;
-        private MeshCollider collider;
-        private MeshRenderer renderer;
+        private new MeshCollider collider;
+        private new MeshRenderer renderer;
 
         public void Initialize(Material chunkMaterial, Vector2Int position, ChunkData data) {
             if (ChunkInitialized) {
@@ -61,7 +62,7 @@ namespace Minecraft.Scripts.World.Chunks {
                     for (byte z = 0; z < chunkSize; z++) {
                         var currentBlockPos = new Vector3Int(x + chunkPosition.x * world.ChunkSize, y, z + chunkPosition.y * world.ChunkSize);
                         var currentBlock = world.GetBlock(currentBlockPos, false);
-                        if (!Blocks.IsOpaque(currentBlock)) {
+                        if (!Blocks.Blocks.IsOpaque(currentBlock)) {
                             continue;
                         }
 
@@ -70,7 +71,7 @@ namespace Minecraft.Scripts.World.Chunks {
                             var dir = face.ToDirection();
                             var worldPos = currentBlockPos + dir;
                             var block = world.GetBlock(worldPos, false);
-                            if (Blocks.IsOpaque(block)) {
+                            if (Blocks.Blocks.IsOpaque(block)) {
                                 continue;
                             }
 

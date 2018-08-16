@@ -9,5 +9,7 @@ namespace Minecraft.Scripts.Input {
         public abstract float GetVerticalRotation();
 
         public abstract bool GetJump();
+
+        public abstract bool GetLeftMouse();
     }
 }
