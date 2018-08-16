@@ -2,7 +2,8 @@
     "name": "Minecraft-Entities",
     "references": [
         "Minecraft-Utility",
-        "Minecraft-Input"
+        "Minecraft-Input",
+        "Cinemachine"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

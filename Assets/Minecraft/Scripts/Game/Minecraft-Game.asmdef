@@ -1,0 +1,13 @@
+{
+    "name": "Minecraft-Game",
+    "references": [
+        "Minecraft-Entities",
+        "Minecraft-Input",
+        "Minecraft-Utility",
+        "Cinemachine"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}

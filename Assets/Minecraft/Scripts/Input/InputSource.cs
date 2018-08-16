@@ -7,5 +7,7 @@ namespace Minecraft.Scripts.Input {
         public abstract float GetFowardMovement();
         public abstract float GetHorizontalRotation();
         public abstract float GetVerticalRotation();
+
+        public abstract bool GetJump();
     }
 }

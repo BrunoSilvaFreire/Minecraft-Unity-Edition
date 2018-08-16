@@ -4,6 +4,7 @@
         public string VerticalMovementKey = "Vertical";
         public string HorizontalRotationKey = "LookX";
         public string VerticalRotationKey = "LookY";
+        public string JumpKey = "Jump";
         public float MouseRotationSpeed = 3;
 
         public override float GetHorizontalMovement() {
@@ -20,6 +21,10 @@
 
         public override float GetVerticalRotation() {
             return UnityEngine.Input.GetAxis(VerticalRotationKey) * MouseRotationSpeed;
+        }
+
+        public override bool GetJump() {
+            return UnityEngine.Input.GetButtonDown(JumpKey);
         }
     }
 }
