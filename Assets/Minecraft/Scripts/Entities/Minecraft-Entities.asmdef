@@ -1,0 +1,11 @@
+{
+    "name": "Minecraft-Entities",
+    "references": [
+        "Minecraft-Utility",
+        "Minecraft-Input"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}

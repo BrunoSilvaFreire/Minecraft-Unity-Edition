@@ -1,0 +1,10 @@
+{
+    "name": "Minecraft-World",
+    "references": [
+        "Minecraft-Utility"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}

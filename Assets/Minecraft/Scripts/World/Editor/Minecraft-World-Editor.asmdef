@@ -1,0 +1,13 @@
+{
+    "name": "Minecraft-World-Editor",
+    "references": [
+        "Minecraft-World",
+        "Minecraft-Utility"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}
