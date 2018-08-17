@@ -5,7 +5,8 @@
         "Minecraft-Input",
         "Minecraft-Utility",
         "Cinemachine",
-        "Minecraft-World"
+        "Minecraft-World",
+        "Minecraft-FX"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

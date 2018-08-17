@@ -1,0 +1,10 @@
+{
+    "name": "Minecraft-Audio",
+    "references": [
+        "FMOD"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}

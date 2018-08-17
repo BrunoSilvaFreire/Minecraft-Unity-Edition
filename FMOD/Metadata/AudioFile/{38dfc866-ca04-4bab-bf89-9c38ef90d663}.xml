@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="AudioFile" id="{38dfc866-ca04-4bab-bf89-9c38ef90d663}">
+        <property name="assetPath">
+            <value>Blocks/Stone/Dig/Stone_Dig_3.ogg</value>
+        </property>
+        <property name="frequencyInKHz">
+            <value>44.0999985</value>
+        </property>
+        <property name="channelCount">
+            <value>1</value>
+        </property>
+        <property name="length">
+            <value>0.5</value>
+        </property>
+        <relationship name="masterAssetFolder">
+            <destination>{4ead93d7-0ec7-4e99-8996-d7dc00e13b7c}</destination>
+        </relationship>
+    </object>
+</objects>

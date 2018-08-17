@@ -1,5 +1,9 @@
-﻿using Minecraft.Scripts.World;
+﻿using Minecraft.Scripts.FX;
+using Minecraft.Scripts.World;
 using Minecraft.Scripts.World.Blocks;
+using Shiroi.FX.Effects;
+using Shiroi.FX.Features;
+using Shiroi.FX.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,6 +14,7 @@ namespace Minecraft.Scripts.Game.World {
         public const string GlossinessKey = "_Glossiness";
         public MeshRenderer BlockCutout;
         public UnityEvent OnBlockBroke;
+        public Effect BlockBreakEffect;
 
         public bool Breaking {
             get;
@@ -18,7 +23,7 @@ namespace Minecraft.Scripts.Game.World {
 
         public Texture[] BreakingTextures;
         private Block currentBlock;
-
+        private Material lastMaterial;
         public void StopBreaking() {
             Breaking = false;
             BlockCutout.gameObject.SetActive(false);
@@ -32,6 +37,7 @@ namespace Minecraft.Scripts.Game.World {
 
         public void SetBreaking(Vector3Int blockWorldPosition, Block block, Material blockMaterial) {
             BlockCutout.GetPropertyBlock(propertyBlock);
+            lastMaterial = blockMaterial;
             propertyBlock.SetFloat(MetallicKey, blockMaterial.GetFloat(MetallicKey));
             propertyBlock.SetFloat(GlossinessKey, blockMaterial.GetFloat(GlossinessKey));
             BlockCutout.SetPropertyBlock(propertyBlock);
@@ -66,6 +72,13 @@ namespace Minecraft.Scripts.Game.World {
 
         private void Break() {
             OnBlockBroke.Invoke();
+            BlockBreakEffect.PlayIfPresent(
+                new EffectContext(
+                    new BlockFeature(currentBlock),
+                    new PositionFeature(BlockCutout.transform.position),
+                    new MaterialFeature(lastMaterial)
+                )
+            );
             currentBreakingProgress = 0;
             StopBreaking();
         }

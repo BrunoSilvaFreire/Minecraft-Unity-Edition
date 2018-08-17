@@ -1,0 +1,12 @@
+{
+    "name": "Minecraft-FX",
+    "references": [
+        "Minecraft-World",
+        "Minecraft-Audio",
+        "FMOD"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}

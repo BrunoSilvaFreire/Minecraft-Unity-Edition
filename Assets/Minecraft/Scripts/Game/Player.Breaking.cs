@@ -14,6 +14,7 @@ namespace Minecraft.Scripts.Game {
 
     public partial class Player {
         public BlockBreaker Breaker;
+        public BlockHighlighter Highlighter;
         public PlayerBreakingParameters BreakingParameters;
 
         private Vector3Int lastBreakPos;
@@ -43,18 +44,23 @@ namespace Minecraft.Scripts.Game {
             RaycastHit hitInfo;
             Block hitBlock;
             Material blockMaterial;
+            Vector3 normal;
             if (Breaker.Breaking) {
                 if (!playerPressingBreak) {
                     Breaker.StopBreaking();
+                    Highlighter.Deselect();
                 }
 
                 Vector3Int currentBlockPos;
-                if (!CastBreakRay(cam, out hitInfo, out currentBlockPos, out hitBlock, out blockMaterial)) {
+                if (!CastBreakRay(cam, out hitInfo, out currentBlockPos, out hitBlock, out blockMaterial, out normal)) {
                     return;
                 }
 
                 if (currentBlockPos != lastBreakPos) {
                     Breaker.SetBreaking(currentBlockPos, hitBlock, blockMaterial);
+                    var hightlightPos = currentBlockPos + (normal * BreakingParameters.BreakRaycastEpsilon);
+                    var hightlightPosInt = new Vector3Int((int) hightlightPos.x, (int) hightlightPos.y, (int) hightlightPos.z);
+                    Highlighter.Highlight(hightlightPosInt);
                 }
 
                 lastBreakPos = currentBlockPos;
@@ -63,20 +69,24 @@ namespace Minecraft.Scripts.Game {
                     return;
                 }
 
-                if (!CastBreakRay(cam, out hitInfo, out lastBreakPos, out hitBlock, out blockMaterial)) {
+                if (!CastBreakRay(cam, out hitInfo, out lastBreakPos, out hitBlock, out blockMaterial, out normal)) {
                     return;
                 }
 
                 Breaker.SetBreaking(lastBreakPos, hitBlock, blockMaterial);
+                var hightlightPos = lastBreakPos + (normal * BreakingParameters.BreakRaycastEpsilon);
+                var hightlightPosInt = new Vector3Int((int) hightlightPos.x, (int) hightlightPos.y, (int) hightlightPos.z);
+                Highlighter.Highlight(hightlightPosInt);
             }
         }
 
-        private bool CastBreakRay(CinemachineVirtualCamera cam, out RaycastHit hit, out Vector3Int blockPosition, out Block hitBlock, out Material blockMaterial) {
+        private bool CastBreakRay(CinemachineVirtualCamera cam, out RaycastHit hit, out Vector3Int blockPosition, out Block hitBlock, out Material blockMaterial, out Vector3 normal) {
             var cameraTransform = cam.transform;
             var dir = cameraTransform.forward;
             var result = Physics.Raycast(cameraTransform.position, dir, out hit, BreakingParameters.BreakDistance, BreakingParameters.BreakableLayerMask);
             var blockPos = hit.point + dir * BreakingParameters.BreakRaycastEpsilon;
             blockPosition = new Vector3Int((int) blockPos.x, (int) blockPos.y, (int) blockPos.z);
+            normal = hit.normal;
             if (!result) {
                 hitBlock = null;
                 blockMaterial = null;
