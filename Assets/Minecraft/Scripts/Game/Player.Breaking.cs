@@ -24,7 +24,8 @@ namespace Minecraft.Scripts.Game {
         }
 
         private void OnBlockBroke() {
-            Scripts.World.World.Instance.SetBlock(lastBreakPos, Blocks.Air.Material);
+            var db = Scripts.World.World.Instance.BlockDatabase;
+            Scripts.World.World.Instance.SetBlock(lastBreakPos, db.Air);
         }
 
         private void UpdateBreaker() {
@@ -44,36 +45,31 @@ namespace Minecraft.Scripts.Game {
             RaycastHit hitInfo;
             Block hitBlock;
             Material blockMaterial;
-            Vector3 normal;
+            var normal = Vector3.zero;
+            var hit = false;
             if (Breaker.Breaking) {
                 if (!playerPressingBreak) {
                     Breaker.StopBreaking();
-                    Highlighter.Deselect();
                 }
 
                 Vector3Int currentBlockPos;
-                if (!CastBreakRay(cam, out hitInfo, out currentBlockPos, out hitBlock, out blockMaterial, out normal)) {
-                    return;
-                }
+                hit = CastBreakRay(cam, out hitInfo, out currentBlockPos, out hitBlock, out blockMaterial, out normal);
+                if (hit) {
+                    if (currentBlockPos != lastBreakPos) {
+                        Breaker.SetBreaking(currentBlockPos, hitBlock, blockMaterial);
+                    }
 
-                if (currentBlockPos != lastBreakPos) {
-                    Breaker.SetBreaking(currentBlockPos, hitBlock, blockMaterial);
-                    var hightlightPos = currentBlockPos + (normal * BreakingParameters.BreakRaycastEpsilon);
-                    var hightlightPosInt = new Vector3Int((int) hightlightPos.x, (int) hightlightPos.y, (int) hightlightPos.z);
-                    Highlighter.Highlight(hightlightPosInt);
+                    lastBreakPos = currentBlockPos;
                 }
-
-                lastBreakPos = currentBlockPos;
             } else {
-                if (!playerPressingBreak) {
-                    return;
+                if (playerPressingBreak && (hit = CastBreakRay(cam, out hitInfo, out lastBreakPos, out hitBlock, out blockMaterial, out normal))) {
+                    Breaker.SetBreaking(lastBreakPos, hitBlock, blockMaterial);
                 }
+            }
 
-                if (!CastBreakRay(cam, out hitInfo, out lastBreakPos, out hitBlock, out blockMaterial, out normal)) {
-                    return;
-                }
-
-                Breaker.SetBreaking(lastBreakPos, hitBlock, blockMaterial);
+            if (!hit) {
+                Highlighter.Deselect();
+            } else {
                 var hightlightPos = lastBreakPos + (normal * BreakingParameters.BreakRaycastEpsilon);
                 var hightlightPosInt = new Vector3Int((int) hightlightPos.x, (int) hightlightPos.y, (int) hightlightPos.z);
                 Highlighter.Highlight(hightlightPosInt);
@@ -94,7 +90,7 @@ namespace Minecraft.Scripts.Game {
             }
 
             var world = Scripts.World.World.Instance;
-            hitBlock = Blocks.GetBlock(world.GetBlock(blockPosition));
+            hitBlock = world.GetBlock(blockPosition);
             blockMaterial = hit.collider.GetComponent<MeshRenderer>().sharedMaterial;
             return true;
         }

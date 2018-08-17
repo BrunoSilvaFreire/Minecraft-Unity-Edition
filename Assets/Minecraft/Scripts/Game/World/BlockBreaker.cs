@@ -50,6 +50,7 @@ namespace Minecraft.Scripts.Game.World {
         }
 
         private float currentBreakingProgress;
+        public float Progress => currentBreakingProgress;
 
         private void Update() {
             if (currentBlock == null || !Breaking) {

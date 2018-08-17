@@ -5,19 +5,20 @@ using UnityEngine;
 namespace Minecraft.Scripts.World.Chunks {
     [Serializable]
     public class ChunkData {
+
         [SerializeField]
-        private BlockMaterial[] data;
+        private Block[] data;
 
         [SerializeField]
         private byte chunkSize, chunkHeight;
 
         public ChunkData(byte chunkSize, byte chunkHeight) {
-            data = new BlockMaterial[chunkSize * chunkHeight * chunkSize];
+            data = new Block[chunkSize * chunkHeight * chunkSize];
             this.chunkSize = chunkSize;
             this.chunkHeight = chunkHeight;
         }
 
-        public BlockMaterial[] Data {
+        public Block[] Data {
             get {
                 return data;
             }
@@ -26,7 +27,7 @@ namespace Minecraft.Scripts.World.Chunks {
             }
         }
 
-        public BlockMaterial this[byte x, byte y, byte z] {
+        public Block this[byte x, byte y, byte z] {
             get {
                 return data[IndexOf(x, y, z)];
             }
@@ -35,7 +36,9 @@ namespace Minecraft.Scripts.World.Chunks {
             }
         }
 
-        public BlockMaterial this[uint index] {
+        
+
+        public Block this[uint index] {
             get {
                 return data[index];
             }
@@ -44,6 +47,9 @@ namespace Minecraft.Scripts.World.Chunks {
             }
         }
 
+        public byte ChunkSize => chunkSize;
+
+        public byte ChunkHeight => chunkHeight;
 
         public int IndexOf(byte x, byte y, byte z) {
             //x + WIDTH * (y + DEPTH * z)

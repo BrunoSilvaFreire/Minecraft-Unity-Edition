@@ -16,6 +16,7 @@ namespace Minecraft.Scripts.World {
         public byte ChunkSize = 16;
         public byte ChunkHeight = byte.MaxValue;
         public WorldGenerator Generator;
+        public BlockDatabase BlockDatabase;
         private readonly List<Chunk> chunkCache = new List<Chunk>();
         public Material ChunkMaterial;
         public bool RandomizeSeed;
@@ -28,14 +29,14 @@ namespace Minecraft.Scripts.World {
             }
         }
 
-        public BlockMaterial GetBlock(int x, byte y, int z, bool loadIfNotPresent = true) {
+        public Block GetBlock(int x, byte y, int z, bool loadIfNotPresent = true) {
             var blockX = (byte) Modulus(x, ChunkSize);
             var blockZ = (byte) Modulus(z, ChunkSize);
             var c = GetChunkAt(x, z, loadIfNotPresent);
             if (c == null || y >= ChunkHeight) {
                 if (c == null) { }
 
-                return BlockMaterial.Unknown;
+                return null;
             }
 
             return c.ChunkData[blockX, y, blockZ];
@@ -125,11 +126,11 @@ namespace Minecraft.Scripts.World {
 
         public List<Chunk> LoadedChunks => chunkCache;
 
-        public BlockMaterial GetBlock(Vector3Int pos, bool loadIfNotPresent = true) {
+        public Block GetBlock(Vector3Int pos, bool loadIfNotPresent = true) {
             return GetBlock(pos.x, (byte) pos.y, pos.z, loadIfNotPresent);
         }
 
-        public void SetBlock(Vector3Int position, BlockMaterial material) {
+        public void SetBlock(Vector3Int position, Block material) {
             var x = position.x;
             var y = (byte) position.y;
             var z = position.z;
@@ -166,6 +167,7 @@ namespace Minecraft.Scripts.World {
             if (c == null) {
                 return;
             }
+
             c.GenerateMesh(this);
         }
     }

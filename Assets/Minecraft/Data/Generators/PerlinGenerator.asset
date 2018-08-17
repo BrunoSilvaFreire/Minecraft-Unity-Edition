@@ -14,3 +14,4 @@ MonoBehaviour:
   PerlinScale: 10
   Octaves: 5
   Amplitude: 5
+  GrassLevel: 3

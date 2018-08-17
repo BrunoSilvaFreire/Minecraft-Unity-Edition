@@ -9,10 +9,10 @@ namespace Minecraft.Scripts.World.Blocks {
 
 
         [SerializeField]
-        private readonly ushort id;
+        private ushort id;
 
         [SerializeField]
-        private readonly byte variation;
+        private byte variation;
 
         public BlockMaterial(ushort id, byte variation = DefaultVariation) {
             this.id = id;
