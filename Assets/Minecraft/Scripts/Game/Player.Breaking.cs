@@ -62,14 +62,17 @@ namespace Minecraft.Scripts.Game {
                     lastBreakPos = currentBlockPos;
                 }
             } else {
-                if (playerPressingBreak && (hit = CastBreakRay(cam, out hitInfo, out lastBreakPos, out hitBlock, out blockMaterial, out normal))) {
+                hit = CastBreakRay(cam, out hitInfo, out lastBreakPos, out hitBlock, out blockMaterial, out normal);
+                if (playerPressingBreak && hit) {
                     Breaker.SetBreaking(lastBreakPos, hitBlock, blockMaterial);
                 }
             }
 
+
             if (!hit) {
                 Highlighter.Deselect();
             } else {
+                Breaker.LastHitPosition = hitInfo.point;
                 var hightlightPos = lastBreakPos + (normal * BreakingParameters.BreakRaycastEpsilon);
                 var hightlightPosInt = new Vector3Int((int) hightlightPos.x, (int) hightlightPos.y, (int) hightlightPos.z);
                 Highlighter.Highlight(hightlightPosInt);

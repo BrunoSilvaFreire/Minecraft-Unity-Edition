@@ -8,11 +8,13 @@ namespace Minecraft.Scripts.World.Blocks {
         public Block Air;
         public Block Stone;
         public Block Grass;
+        public Block DiamondOre;
 
         public Block[] AllBlocks => new[] {
             Air,
             Stone,
-            Grass
+            Grass,
+            DiamondOre
         };
 
         public Block GetBlock(BlockMaterial material) {

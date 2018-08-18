@@ -2,7 +2,7 @@
 using Shiroi.FX.Features;
 using UnityEngine;
 
-namespace Minecraft.Scripts.FX {
+namespace Minecraft.Scripts.FX.Features {
 	public class BlockFeature : EffectFeature {
 		private Block block;
 		public BlockFeature(Block block, params PropertyName[] tags) : base(tags) {

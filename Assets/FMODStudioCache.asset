@@ -19,9 +19,12 @@ MonoBehaviour:
   - {fileID: 114859623027425168}
   - {fileID: 114232930441817676}
   - {fileID: 114019181627388914}
+  - {fileID: 114770063617412484}
+  - {fileID: 114838598108582082}
+  - {fileID: 114720470269089506}
   MasterBankRef: {fileID: 114375952724013180}
   StringsBankRef: {fileID: 114015097204864240}
-  stringsBankWriteTime: 636701016132843538
+  stringsBankWriteTime: 636702200024087737
   cacheVersion: 2
 --- !u!114 &114015097204864240
 MonoBehaviour:
@@ -35,11 +38,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Path: FMOD\Build\Desktop\Master Bank.strings.bank
-  lastModified: 636701016132843538
+  lastModified: 636702200024087737
   LoadResult: 0
   FileSizes:
   - Name: Desktop
-    Value: 872
+    Value: 1012
   Exists: 1
 --- !u!114 &114019181627388914
 MonoBehaviour:
@@ -75,11 +78,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Path: C:\Work\Unity\Minecraft\FMOD\Build\Desktop\Blocks.bank
-  lastModified: 636701016135813903
+  lastModified: 636702200027403166
   LoadResult: 0
   FileSizes:
   - Name: Desktop
-    Value: 50816
+    Value: 103936
   Exists: 1
 --- !u!114 &114232930441817676
 MonoBehaviour:
@@ -115,12 +118,78 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Path: C:\Work\Unity\Minecraft\FMOD\Build\Desktop\Master Bank.bank
-  lastModified: 636701016132678511
+  lastModified: 636702200023962733
   LoadResult: 0
   FileSizes:
   - Name: Desktop
     Value: 12474
   Exists: 1
+--- !u!114 &114720470269089506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/World/Blocks/Grass/Grass_Dig
+  guid: 767acd9886a2a145b9454fd67da89d17
+  Banks:
+  - {fileID: 114185444500751986}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 500
+--- !u!114 &114770063617412484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/World/Blocks/Grass/Grass_Hit
+  guid: 0c0649664f61a34d9bb01161a4066cb7
+  Banks:
+  - {fileID: 114185444500751986}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 609
+--- !u!114 &114838598108582082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/World/Blocks/Grass/Grass_Step
+  guid: 0fd0bb5fb2523f41920503ca7308e2f0
+  Banks:
+  - {fileID: 114185444500751986}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 609
 --- !u!114 &114859623027425168
 MonoBehaviour:
   m_ObjectHideFlags: 0

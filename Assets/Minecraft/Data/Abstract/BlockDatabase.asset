@@ -14,6 +14,7 @@ MonoBehaviour:
   Air: {fileID: 114260155196906244}
   Stone: {fileID: 114104204515819304}
   Grass: {fileID: 114071646838245674}
+  DiamondOre: {fileID: 114895956488309554}
 --- !u!114 &114071646838245674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28,6 +29,12 @@ MonoBehaviour:
   material:
     id: 2
     variation: 0
+  audio:
+    Proxy: 0
+    ProxyBlock: {fileID: 0}
+    stepEvent: event:/SFX/World/Blocks/Grass/Grass_Step
+    hitEvent: event:/SFX/World/Blocks/Grass/Grass_Hit
+    digEvent: event:/SFX/World/Blocks/Grass/Grass_Dig
   opaque: 1
   hardness: 1
   VisualMaterial: {fileID: 2100000, guid: 7c7776847f21eb0488a628645c130bc6, type: 2}
@@ -45,6 +52,12 @@ MonoBehaviour:
   material:
     id: 1
     variation: 0
+  audio:
+    Proxy: 0
+    ProxyBlock: {fileID: 0}
+    stepEvent: event:/SFX/World/Blocks/Stone/Stone_Step
+    hitEvent: event:/SFX/World/Blocks/Stone/Stone_Hit
+    digEvent: event:/SFX/World/Blocks/Stone/Stone_Dig
   opaque: 1
   hardness: 2
   VisualMaterial: {fileID: 2100000, guid: 152d0159138b67a46a652d02bbef5b89, type: 2}
@@ -62,6 +75,35 @@ MonoBehaviour:
   material:
     id: 0
     variation: 0
+  audio:
+    Proxy: 0
+    ProxyBlock: {fileID: 0}
+    stepEvent: 
+    hitEvent: 
+    digEvent: 
   opaque: 0
   hardness: 0
   VisualMaterial: {fileID: 0}
+--- !u!114 &114895956488309554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c440de701fe44ca8ef53d82f162fb3a, type: 3}
+  m_Name: DiamondOre
+  m_EditorClassIdentifier: 
+  material:
+    id: 56
+    variation: 0
+  audio:
+    Proxy: 1
+    ProxyBlock: {fileID: 114104204515819304}
+    stepEvent: 
+    hitEvent: 
+    digEvent: 
+  opaque: 1
+  hardness: 3
+  VisualMaterial: {fileID: 2100000, guid: 4e4eaceb39da7ca4ebb829aa7ecead8e, type: 2}

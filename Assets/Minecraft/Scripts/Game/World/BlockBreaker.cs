@@ -1,4 +1,5 @@
 ﻿using Minecraft.Scripts.FX;
+using Minecraft.Scripts.FX.Features;
 using Minecraft.Scripts.World;
 using Minecraft.Scripts.World.Blocks;
 using Shiroi.FX.Effects;
@@ -15,6 +16,8 @@ namespace Minecraft.Scripts.Game.World {
         public MeshRenderer BlockCutout;
         public UnityEvent OnBlockBroke;
         public Effect BlockBreakEffect;
+        public float BlockHitEffectFrequency = 1;
+        public Effect BlockHitEffect;
 
         public bool Breaking {
             get;
@@ -24,6 +27,7 @@ namespace Minecraft.Scripts.Game.World {
         public Texture[] BreakingTextures;
         private Block currentBlock;
         private Material lastMaterial;
+
         public void StopBreaking() {
             Breaking = false;
             BlockCutout.gameObject.SetActive(false);
@@ -34,6 +38,11 @@ namespace Minecraft.Scripts.Game.World {
         }
 
         private MaterialPropertyBlock propertyBlock;
+
+        public Vector3 LastHitPosition {
+            get;
+            set;
+        }
 
         public void SetBreaking(Vector3Int blockWorldPosition, Block block, Material blockMaterial) {
             BlockCutout.GetPropertyBlock(propertyBlock);
@@ -51,16 +60,30 @@ namespace Minecraft.Scripts.Game.World {
 
         private float currentBreakingProgress;
         public float Progress => currentBreakingProgress;
+        private float lastHit;
 
         private void Update() {
             if (currentBlock == null || !Breaking) {
                 return;
             }
 
+            lastHit += Time.deltaTime;
             if (Breaking) {
                 currentBreakingProgress += 1 / currentBlock.Hardness * Time.deltaTime;
             }
 
+            var hitEffectDelay = 1 / BlockHitEffectFrequency;
+            if (Mathf.Approximately(0, lastHit) || lastHit > hitEffectDelay) {
+                lastHit -= hitEffectDelay;
+                BlockHitEffect.PlayIfPresent(
+                    new EffectContext(
+                        new BlockFeature(currentBlock),
+                        new PositionFeature(LastHitPosition),
+                        new MaterialFeature(lastMaterial),
+                        new AudioFeature(BlockCutout.transform, Vector3.zero)
+                    )
+                );
+            }
 
             if (currentBreakingProgress >= 1) {
                 Break();
@@ -71,16 +94,20 @@ namespace Minecraft.Scripts.Game.World {
             }
         }
 
+        private EffectContext GetEffectContext() {
+            return new EffectContext(
+                new BlockFeature(currentBlock),
+                new PositionFeature(BlockCutout.transform.position),
+                new MaterialFeature(lastMaterial),
+                new AudioFeature(BlockCutout.transform, Vector3.zero)
+            );
+        }
+
         private void Break() {
             OnBlockBroke.Invoke();
-            BlockBreakEffect.PlayIfPresent(
-                new EffectContext(
-                    new BlockFeature(currentBlock),
-                    new PositionFeature(BlockCutout.transform.position),
-                    new MaterialFeature(lastMaterial)
-                )
-            );
+            BlockBreakEffect.PlayIfPresent(GetEffectContext);
             currentBreakingProgress = 0;
+            lastHit = 0;
             StopBreaking();
         }
     }
