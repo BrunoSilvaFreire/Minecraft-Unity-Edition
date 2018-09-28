@@ -2,6 +2,7 @@
 using Minecraft.Scripts.FX.Features;
 using Minecraft.Scripts.World;
 using Minecraft.Scripts.World.Blocks;
+using Minecraft.Scripts.World.Utilities;
 using Shiroi.FX.Effects;
 using Shiroi.FX.Features;
 using Shiroi.FX.Utilities;
@@ -52,7 +53,7 @@ namespace Minecraft.Scripts.Game.World {
             BlockCutout.SetPropertyBlock(propertyBlock);
             var go = BlockCutout.gameObject;
             go.SetActive(true);
-            go.transform.position = blockWorldPosition + new Vector3(0.5F, 0.5F, 0.5F);
+            go.transform.position = blockWorldPosition.AddHalf();
             Breaking = true;
             currentBlock = block;
             currentBreakingProgress = 0;
@@ -77,6 +78,7 @@ namespace Minecraft.Scripts.Game.World {
                 lastHit -= hitEffectDelay;
                 BlockHitEffect.PlayIfPresent(
                     new EffectContext(
+                        this,
                         new BlockFeature(currentBlock),
                         new PositionFeature(LastHitPosition),
                         new MaterialFeature(lastMaterial),
@@ -96,6 +98,7 @@ namespace Minecraft.Scripts.Game.World {
 
         private EffectContext GetEffectContext() {
             return new EffectContext(
+                this,
                 new BlockFeature(currentBlock),
                 new PositionFeature(BlockCutout.transform.position),
                 new MaterialFeature(lastMaterial),

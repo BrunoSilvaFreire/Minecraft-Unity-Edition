@@ -36,6 +36,12 @@ namespace Minecraft.Scripts.World.Chunks {
             }
         }
 
+        public bool IsMeshGenerated {
+            get {
+                return isMeshGenerated;
+            }
+        }
+
         public void Initialize(Material chunkMaterial, Vector2Int position, ChunkData data) {
             if (ChunkInitialized) {
                 return;
@@ -46,10 +52,17 @@ namespace Minecraft.Scripts.World.Chunks {
             chunkData = data;
         }
 
+        private bool isMeshGenerated;
+
         public void GenerateMesh(World world) {
             var firstMat = FindFirstOpaqueBlock();
             if (firstMat == null) {
+                Debug.LogWarning("Mesh generation cancelled because no opaque block was found!");
                 return;
+            }
+
+            if (!isMeshGenerated) {
+                isMeshGenerated = true;
             }
 
             ClearOldMeshes();
@@ -66,8 +79,10 @@ namespace Minecraft.Scripts.World.Chunks {
         }
 
         private void ClearOldMeshes() {
-            for (int i = 0; i < transform.childCount; i++) {
-                Destroy(transform.GetChild(i).gameObject);
+            for (var i = 0; i < transform.childCount; i++) {
+                var obj = transform.GetChild(i).gameObject;
+                Debug.Log("Destroying mesh @ " + obj);
+                Destroy(obj);
             }
         }
 
@@ -107,6 +122,7 @@ namespace Minecraft.Scripts.World.Chunks {
                 return;
             }
 
+            Debug.LogWarning("Generating mesh for block @ " + blockMaterial);
             var chunkSize = world.ChunkSize;
             var chunkHeight = world.ChunkHeight;
             var builder = new MeshBuilder();
@@ -123,12 +139,18 @@ namespace Minecraft.Scripts.World.Chunks {
                 for (byte y = 0; y < chunkHeight; y++) {
                     for (byte z = 0; z < chunkSize; z++) {
                         var currentBlockPos = new Vector3Int(x + chunkPosition.x * world.ChunkSize, y, z + chunkPosition.y * world.ChunkSize);
-                        var currentBlock = world.GetBlock(currentBlockPos, false);
-                        var mat = currentBlock.Material;
+                        var currentBlock = world.GetBlock(currentBlockPos, true);
+
+                        if (currentBlock == null) {
+                            Debug.LogError($"Block @ {currentBlockPos} is null!");
+                            continue;
+                        }
 
                         if (!currentBlock.Opaque) {
                             continue;
                         }
+
+                        var mat = currentBlock.Material;
 
                         if (mat != blockMaterial) {
                             if (!listOfMaterials.Contains(mat)) {

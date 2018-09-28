@@ -2,10 +2,11 @@
 using Minecraft.Scripts.Game.World;
 using Minecraft.Scripts.Input;
 using UnityEngine;
+using UnityUtilities.Singletons;
 using MovableEntity = Minecraft.Scripts.Entities.Movable.MovableEntity;
 
 namespace Minecraft.Scripts.Game {
-    public partial class Player : MonoBehaviour {
+    public partial class Player : Singleton<Player> {
         public PlayerInputSource InputSource;
         public MovableEntity CurrentEntity;
         public int ActiveEntityCameraPriority = 10, InactiveEntityCameraPriority = 0;
@@ -33,6 +34,13 @@ namespace Minecraft.Scripts.Game {
 
         private void Update() {
             UpdateBreaker();
+            UpdateWorld();
+        }
+
+        private void OnDrawGizmos() {
+            DrawWorldGizmos();
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawWireSphere(lastBreakPos, 1);
         }
     }
 }

@@ -4,6 +4,7 @@ using FMOD.Studio;
 using FMODUnity;
 using Minecraft.Scripts.FX.Features;
 using Shiroi.FX.Effects;
+using Shiroi.FX.Features;
 using Debug = UnityEngine.Debug;
 
 namespace Minecraft.Scripts.FX {

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Minecraft.Scripts.World.Utilities;
+using UnityEngine;
 
 namespace Minecraft.Scripts.Game.World {
     public class BlockHighlighter : MonoBehaviour {
@@ -10,7 +11,7 @@ namespace Minecraft.Scripts.Game.World {
 
         public void Highlight(Vector3Int position) {
             Highlighter.SetActive(true);
-            Highlighter.transform.position = position + new Vector3(.5F, .5F, .5F);
+            Highlighter.transform.position = position.AddHalf();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Minecraft.Scripts.Utility;
 using Minecraft.Scripts.World.Blocks;
 using Minecraft.Scripts.World.Chunks;
 using Minecraft.Scripts.World.Generation;
@@ -17,11 +18,14 @@ namespace Minecraft.Scripts.World {
         public byte ChunkHeight = byte.MaxValue;
         public WorldGenerator Generator;
         public BlockDatabase BlockDatabase;
-        private readonly List<Chunk> chunkCache = new List<Chunk>();
         public Material ChunkMaterial;
         public bool RandomizeSeed;
         public int Seed;
         public bool RegenerateOnStart;
+
+        public List<Chunk> LoadedChunks {
+            get;
+        } = new List<Chunk>();
 
         private void Start() {
             if (RegenerateOnStart) {
@@ -34,21 +38,19 @@ namespace Minecraft.Scripts.World {
             var blockZ = (byte) Modulus(z, ChunkSize);
             var c = GetChunkAt(x, z, loadIfNotPresent);
             if (c == null || y >= ChunkHeight) {
-                if (c == null) { }
-
                 return null;
             }
 
             return c.ChunkData[blockX, y, blockZ];
         }
 
-        private Chunk GetChunk(int chunkX, int chunkY, bool loadIfNotPresent = true) {
+        public Chunk GetChunk(int chunkX, int chunkY, bool loadIfNotPresent = true) {
             return GetChunk(new Vector2Int(chunkX, chunkY), loadIfNotPresent);
         }
 
-        private Chunk GetChunk(Vector2Int position, bool loadIfNotPresent = true) {
+        public Chunk GetChunk(Vector2Int position, bool loadIfNotPresent = true) {
             Chunk cachedEntry = null;
-            foreach (var chunk in chunkCache) {
+            foreach (var chunk in LoadedChunks) {
                 if (chunk.ChunkPosition == position) {
                     cachedEntry = chunk;
                     break;
@@ -59,23 +61,29 @@ namespace Minecraft.Scripts.World {
                 return cachedEntry;
             }
 
-            if (loadIfNotPresent) {
-                var chunk = LoadChunk(position);
-                chunkCache.Add(chunk);
-                return chunk;
-            }
-
-            return null;
+            return loadIfNotPresent ? LoadChunk(position) : null;
         }
 
-        private Chunk GetChunkAt(int x, int z, bool loadIfNotPresent = true) {
+        public Vector2Int GetChunkPositionAt(int x, int z) {
             var chunkX = x / ChunkSize;
             var chunkY = z / ChunkSize;
+            return new Vector2Int(chunkX, chunkY);
+        }
+
+        public Chunk GetChunkAt(int x, int z, bool loadIfNotPresent = true) {
+            var chunkX = x / ChunkSize;
+            var chunkY = z / ChunkSize;
+            if (x < 0) {
+                chunkX--;
+            }
+
+            if (z < 0) {
+                chunkY--;
+            }
             return GetChunk(chunkX, chunkY, loadIfNotPresent);
         }
 
-        private Chunk LoadChunk(Vector2Int position) {
-            Debug.Log($"Instantiating new chunk @ {position}");
+        private Chunk LoadChunk(Vector2Int position, bool generateMesh = false) {
             var obj = new GameObject($"Chunk {position}");
             obj.transform.parent = transform;
             var chunk = obj.AddComponent<Chunk>();
@@ -83,6 +91,7 @@ namespace Minecraft.Scripts.World {
             Generator.Populate(this, ref data, position);
             chunk.Initialize(ChunkMaterial, position, data);
             chunk.transform.position = new Vector3(position.x * ChunkSize, 0, position.y * ChunkSize);
+            LoadedChunks.Add(chunk);
             return chunk;
         }
 
@@ -91,7 +100,7 @@ namespace Minecraft.Scripts.World {
         }
 
         public void ClearOldChunks() {
-            chunkCache.Clear();
+            LoadedChunks.Clear();
             for (var i = 0; i < transform.childCount; i++) {
                 var child = transform.GetChild(i).gameObject;
                 Debug.Log("Destroying " + child);
@@ -124,7 +133,6 @@ namespace Minecraft.Scripts.World {
             }
         }
 
-        public List<Chunk> LoadedChunks => chunkCache;
 
         public Block GetBlock(Vector3Int pos, bool loadIfNotPresent = true) {
             return GetBlock(pos.x, (byte) pos.y, pos.z, loadIfNotPresent);
@@ -143,6 +151,7 @@ namespace Minecraft.Scripts.World {
                 return;
             }
 
+            Debug.Log($"Changing block {c.ChunkData[blockX, y, blockZ]} @ {blockX}, {y}, {blockZ} to {material}");
             c.ChunkData[blockX, y, blockZ] = material;
             c.GenerateMesh(this);
             if (blockX == 0) {
@@ -169,6 +178,22 @@ namespace Minecraft.Scripts.World {
             }
 
             c.GenerateMesh(this);
+        }
+
+        public Vector2Int WorldPositionOf(Chunk chunk) {
+            var pos = chunk.ChunkPosition;
+            pos.x *= ChunkSize;
+            pos.y *= ChunkSize;
+            return pos;
+        }
+
+        public void UnloadChunk(Chunk chunk) {
+            LoadedChunks.Remove(chunk);
+            Destroy(chunk.gameObject);
+        }
+
+        public Chunk GetChunkAt(Vector3 position, bool loadIfNotPresent = true) {
+            return GetChunkAt(position.ExtractBlockX(), position.ExtractBlockZ(), loadIfNotPresent);
         }
     }
 }

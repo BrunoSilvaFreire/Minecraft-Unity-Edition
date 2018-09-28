@@ -3,6 +3,7 @@ using Cinemachine;
 using Minecraft.Scripts.Game.World;
 using Minecraft.Scripts.World.Blocks;
 using UnityEngine;
+using UnityUtilities;
 
 namespace Minecraft.Scripts.Game {
     [Serializable]
@@ -25,6 +26,7 @@ namespace Minecraft.Scripts.Game {
 
         private void OnBlockBroke() {
             var db = Scripts.World.World.Instance.BlockDatabase;
+            Debug.Log("Detroying block @ " + lastBreakPos);
             Scripts.World.World.Instance.SetBlock(lastBreakPos, db.Air);
         }
 
@@ -45,15 +47,14 @@ namespace Minecraft.Scripts.Game {
             RaycastHit hitInfo;
             Block hitBlock;
             Material blockMaterial;
-            var normal = Vector3.zero;
-            var hit = false;
+            bool hit;
             if (Breaker.Breaking) {
                 if (!playerPressingBreak) {
                     Breaker.StopBreaking();
                 }
 
                 Vector3Int currentBlockPos;
-                hit = CastBreakRay(cam, out hitInfo, out currentBlockPos, out hitBlock, out blockMaterial, out normal);
+                hit = CastBreakRay(cam, out hitInfo, out currentBlockPos, out hitBlock, out blockMaterial);
                 if (hit) {
                     if (currentBlockPos != lastBreakPos) {
                         Breaker.SetBreaking(currentBlockPos, hitBlock, blockMaterial);
@@ -62,7 +63,7 @@ namespace Minecraft.Scripts.Game {
                     lastBreakPos = currentBlockPos;
                 }
             } else {
-                hit = CastBreakRay(cam, out hitInfo, out lastBreakPos, out hitBlock, out blockMaterial, out normal);
+                hit = CastBreakRay(cam, out hitInfo, out lastBreakPos, out hitBlock, out blockMaterial);
                 if (playerPressingBreak && hit) {
                     Breaker.SetBreaking(lastBreakPos, hitBlock, blockMaterial);
                 }
@@ -73,19 +74,27 @@ namespace Minecraft.Scripts.Game {
                 Highlighter.Deselect();
             } else {
                 Breaker.LastHitPosition = hitInfo.point;
-                var hightlightPos = lastBreakPos + (normal * BreakingParameters.BreakRaycastEpsilon);
-                var hightlightPosInt = new Vector3Int((int) hightlightPos.x, (int) hightlightPos.y, (int) hightlightPos.z);
-                Highlighter.Highlight(hightlightPosInt);
+                var highlightPos = lastBreakPos;
+                Highlighter.Highlight(highlightPos);
             }
         }
 
-        private bool CastBreakRay(CinemachineVirtualCamera cam, out RaycastHit hit, out Vector3Int blockPosition, out Block hitBlock, out Material blockMaterial, out Vector3 normal) {
+        private bool CastBreakRay(CinemachineVirtualCamera cam, out RaycastHit hit, out Vector3Int blockPosition, out Block hitBlock, out Material blockMaterial) {
             var cameraTransform = cam.transform;
             var dir = cameraTransform.forward;
             var result = Physics.Raycast(cameraTransform.position, dir, out hit, BreakingParameters.BreakDistance, BreakingParameters.BreakableLayerMask);
-            var blockPos = hit.point + dir * BreakingParameters.BreakRaycastEpsilon;
+            var blockPos = hit.point + -hit.normal * BreakingParameters.BreakRaycastEpsilon;
+
+
             blockPosition = new Vector3Int((int) blockPos.x, (int) blockPos.y, (int) blockPos.z);
-            normal = hit.normal;
+            if (blockPos.x < 0) {
+                blockPosition.x--;
+            }
+
+            if (blockPos.z < 0) {
+                blockPosition.z--;
+            }
+
             if (!result) {
                 hitBlock = null;
                 blockMaterial = null;

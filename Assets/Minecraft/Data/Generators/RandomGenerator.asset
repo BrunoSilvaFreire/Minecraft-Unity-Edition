@@ -11,3 +11,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca69579ba0c9482cb52043138c48b772, type: 3}
   m_Name: RandomGenerator
   m_EditorClassIdentifier: 
+  PerlinScale: 10
+  Blocks:
+  - {fileID: 114895956488309554, guid: a648556678366cb4bac036594db90f5a, type: 2}
+  - {fileID: 114071646838245674, guid: a648556678366cb4bac036594db90f5a, type: 2}
+  - {fileID: 114104204515819304, guid: a648556678366cb4bac036594db90f5a, type: 2}
+  GrassLevel: 3

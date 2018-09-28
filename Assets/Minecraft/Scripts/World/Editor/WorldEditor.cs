@@ -14,6 +14,7 @@ namespace Minecraft.Scripts.World.Editor {
         public override void OnInspectorGUI() {
             DrawDefaultInspector();
 
+            EditorGUILayout.LabelField($"{world.LoadedChunks.Count} chunks loaded", EditorStyles.boldLabel);
             foreach (var chunk in world.LoadedChunks) {
                 EditorGUILayout.ObjectField($"Chunk @ {chunk.ChunkPosition}", chunk, typeof(Chunk), false);
             }
@@ -22,6 +23,7 @@ namespace Minecraft.Scripts.World.Editor {
             if (GUILayout.Button("Generate")) {
                 world.GenerateSpawn();
             }
+
             EditorGUILayout.EndHorizontal();
         }
     }
