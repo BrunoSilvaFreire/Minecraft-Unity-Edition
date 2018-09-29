@@ -1,7 +1,9 @@
 ﻿using System;
 using Cinemachine;
 using Minecraft.Scripts.Game.World;
+using Minecraft.Scripts.Items;
 using Minecraft.Scripts.World.Blocks;
+using Minecraft.Scripts.World.Utilities;
 using UnityEngine;
 using UnityUtilities;
 
@@ -11,6 +13,7 @@ namespace Minecraft.Scripts.Game {
         public float BreakDistance = 2;
         public float BreakRaycastEpsilon = .1F;
         public LayerMask BreakableLayerMask;
+        public ItemEntity ItemPrefab;
     }
 
     public partial class Player {
@@ -25,9 +28,13 @@ namespace Minecraft.Scripts.Game {
         }
 
         private void OnBlockBroke() {
-            var db = Scripts.World.World.Instance.BlockDatabase;
-            Debug.Log("Detroying block @ " + lastBreakPos);
-            Scripts.World.World.Instance.SetBlock(lastBreakPos, db.Air);
+            var world = Scripts.World.World.Instance;
+            var db = world.BlockDatabase;
+            var block = world.GetBlock(lastBreakPos);
+            world.SetBlock(lastBreakPos, db.Air);
+            foreach (var drop in block.Drops) {
+                drop.Drop(BreakingParameters.ItemPrefab, lastBreakPos.AddHalf());
+            }
         }
 
         private void UpdateBreaker() {

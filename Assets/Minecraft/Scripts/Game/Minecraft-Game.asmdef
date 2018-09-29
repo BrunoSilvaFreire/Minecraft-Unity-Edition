@@ -6,10 +6,15 @@
         "Minecraft-Utility",
         "Cinemachine",
         "Minecraft-World",
-        "Minecraft-FX"
+        "Minecraft-FX",
+        "Minecraft-Items"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],
     "excludePlatforms": [],
-    "allowUnsafeCode": false
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
 }

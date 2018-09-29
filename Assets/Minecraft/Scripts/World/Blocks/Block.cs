@@ -1,4 +1,6 @@
 ﻿using System;
+using Minecraft.Scripts.Items;
+using Minecraft.Scripts.Items.Misc;
 using UnityEngine;
 
 namespace Minecraft.Scripts.World.Blocks {
@@ -25,6 +27,7 @@ namespace Minecraft.Scripts.World.Blocks {
         public float Hardness => hardness;
 
         public BlockAudio Audio => audio;
+        public ItemDrop[] Drops;
 
         public override string ToString() {
             return $"Block({nameof(material)}: {material}, {nameof(opaque)}: {opaque})";

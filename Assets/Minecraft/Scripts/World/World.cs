@@ -80,6 +80,7 @@ namespace Minecraft.Scripts.World {
             if (z < 0) {
                 chunkY--;
             }
+
             return GetChunk(chunkX, chunkY, loadIfNotPresent);
         }
 

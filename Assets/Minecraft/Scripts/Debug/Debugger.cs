@@ -10,9 +10,19 @@ namespace Minecraft.Scripts.Debug {
                 return;
             }
 #endif
+            DrawGizmos(Player.Instance, World.World.Instance);
+        }
+
+        private void Update() {
+#if UNITY_EDITOR
+            if (!EditorApplication.isPlaying) {
+                return;
+            }
+#endif
             Debug(Player.Instance, World.World.Instance);
         }
 
         protected abstract void Debug(Player player, World.World world);
+        protected abstract void DrawGizmos(Player player, World.World world);
     }
 }
