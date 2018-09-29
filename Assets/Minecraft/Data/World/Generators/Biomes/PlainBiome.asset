@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a78efd72ad114d62bb6552ddbe6a2f17, type: 3}
+  m_Name: PlainBiome
+  m_EditorClassIdentifier: 
+  Crust:
+    MinimumHeight: 8
+    CrustElements:
+    - Height: 1
+      Block: {fileID: 114071646838245674, guid: a648556678366cb4bac036594db90f5a, type: 2}
+    - Height: 2
+      Block: {fileID: 114235635094152608, guid: a648556678366cb4bac036594db90f5a, type: 2}
+  Subterrain:
+    DefaultBlock: {fileID: 114104204515819304, guid: a648556678366cb4bac036594db90f5a, type: 2}
+    Clusters:
+    - Block: {fileID: 114895956488309554, guid: a648556678366cb4bac036594db90f5a, type: 2}
+      Amount:
+        Start: 1
+        End: 4
+      MaxWidth:
+        Start: 4
+        End: 6
+      MaxHeight:
+        Start: 4
+        End: 6
+      MaxDepth:
+        Start: 4
+        End: 6
+      Probability: 50
+    - Block: {fileID: 114198773441606638, guid: a648556678366cb4bac036594db90f5a, type: 2}
+      Amount:
+        Start: 1
+        End: 4
+      MaxWidth:
+        Start: 4
+        End: 6
+      MaxHeight:
+        Start: 4
+        End: 6
+      MaxDepth:
+        Start: 4
+        End: 6
+      Probability: 50
+  PerlinScale: 10

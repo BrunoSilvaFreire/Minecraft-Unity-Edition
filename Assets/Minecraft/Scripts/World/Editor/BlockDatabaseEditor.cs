@@ -14,7 +14,7 @@ namespace Minecraft.Scripts.World.Editor {
 
         public override void OnInspectorGUI() {
             if (GUILayout.Button("Create Block")) {
-                Selection.activeObject = db.AddToAssetFile<Block>();
+                UnityEditor.Selection.activeObject = db.AddToAssetFile<Block>();
             }
 
             DrawDefaultInspector();

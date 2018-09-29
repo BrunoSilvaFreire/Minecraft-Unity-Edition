@@ -152,7 +152,6 @@ namespace Minecraft.Scripts.World {
                 return;
             }
 
-            Debug.Log($"Changing block {c.ChunkData[blockX, y, blockZ]} @ {blockX}, {y}, {blockZ} to {material}");
             c.ChunkData[blockX, y, blockZ] = material;
             c.GenerateMesh(this);
             if (blockX == 0) {
@@ -196,5 +195,12 @@ namespace Minecraft.Scripts.World {
         public Chunk GetChunkAt(Vector3 position, bool loadIfNotPresent = true) {
             return GetChunkAt(position.ExtractBlockX(), position.ExtractBlockZ(), loadIfNotPresent);
         }
+
+        public Vector3Int ToLocalChunkPosition(Vector3Int tilePos) {
+            var blockX = (byte) Modulus(tilePos.x, ChunkSize);
+            var blockZ = (byte) Modulus(tilePos.z, ChunkSize);
+            return new Vector3Int(blockX, tilePos.y, blockZ);
+        }
+
     }
 }

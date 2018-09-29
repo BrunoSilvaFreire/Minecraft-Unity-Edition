@@ -5,7 +5,6 @@ using UnityEngine;
 namespace Minecraft.Scripts.World.Chunks {
     [Serializable]
     public class ChunkData {
-
         [SerializeField]
         private Block[] data;
 
@@ -36,7 +35,6 @@ namespace Minecraft.Scripts.World.Chunks {
             }
         }
 
-        
 
         public Block this[uint index] {
             get {
@@ -52,8 +50,30 @@ namespace Minecraft.Scripts.World.Chunks {
         public byte ChunkHeight => chunkHeight;
 
         public int IndexOf(byte x, byte y, byte z) {
-            //x + WIDTH * (y + DEPTH * z)
-            return x + chunkSize * (y + chunkHeight * z);
+            return IndexOf(x, y, z, chunkSize, chunkHeight);
+        }
+
+        public static int IndexOf(int x, int y, int z, int width, int height) {
+            return x + width * (y + height * z);
+        }
+
+        public static int IndexOf(byte x, byte y, byte z, byte width, byte height) {
+            return x + width * (y + height * z);
+        }
+
+
+        public bool TryGet(int x, int y, int z, out Block neighbor) {
+            if (!IsWithinBounds(x, y, z)) {
+                neighbor = null;
+                return false;
+            }
+
+            neighbor = this[(byte) x, (byte) y, (byte) z];
+            return true;
+        }
+
+        private bool IsWithinBounds(int x, int y, int z) {
+            return x >= 0 && y >= 0 && z >= 0 && x < chunkSize && y < chunkHeight && z < chunkSize;
         }
     }
 }

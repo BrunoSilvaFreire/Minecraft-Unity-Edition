@@ -4,6 +4,9 @@ using Minecraft.Scripts.Utility;
 using Minecraft.Scripts.World.Blocks;
 using UnityEngine;
 using Minecraft.Scripts.World.Utilities;
+#if UNITY_EDITOR
+using UnityEditor;    
+#endif
 
 namespace Minecraft.Scripts.World.Chunks {
     public class Chunk : MonoBehaviour {
@@ -66,13 +69,13 @@ namespace Minecraft.Scripts.World.Chunks {
             }
 
             ClearOldMeshes();
-            var listOfMaterials = new List<BlockMaterial>();
-            var completedMaterials = new List<BlockMaterial> {
-                firstMat.Material
+            var listOfMaterials = new List<Block>();
+            var completedMaterials = new List<Block> {
+                firstMat
             };
-            GenerateSubMesh(world, firstMat.Material, listOfMaterials);
-            BlockMaterial pendingMaterial;
-            while ((pendingMaterial = FindPendingMaterial(listOfMaterials, completedMaterials)) != BlockMaterial.Unknown) {
+            GenerateSubMesh(world, firstMat, listOfMaterials);
+            Block pendingMaterial;
+            while ((pendingMaterial = FindPendingMaterial(listOfMaterials, completedMaterials)) != null) {
                 GenerateSubMesh(world, pendingMaterial, listOfMaterials);
                 completedMaterials.Add(pendingMaterial);
             }
@@ -81,12 +84,17 @@ namespace Minecraft.Scripts.World.Chunks {
         private void ClearOldMeshes() {
             for (var i = 0; i < transform.childCount; i++) {
                 var obj = transform.GetChild(i).gameObject;
-                Debug.Log("Destroying mesh @ " + obj);
+#if UNITY_EDITOR
+                if (!EditorApplication.isPlaying) {
+                    DestroyImmediate(obj);
+                    continue;
+                }
+#endif
                 Destroy(obj);
             }
         }
 
-        private BlockMaterial FindPendingMaterial(List<BlockMaterial> listOfMaterials, List<BlockMaterial> completedMaterials) {
+        private Block FindPendingMaterial(List<Block> listOfMaterials, List<Block> completedMaterials) {
             foreach (var candidate in listOfMaterials) {
                 if (completedMaterials.Contains(candidate)) {
                     continue;
@@ -95,7 +103,7 @@ namespace Minecraft.Scripts.World.Chunks {
                 return candidate;
             }
 
-            return BlockMaterial.Unknown;
+            return null;
         }
 
         private Block FindFirstOpaqueBlock() {
@@ -115,18 +123,17 @@ namespace Minecraft.Scripts.World.Chunks {
             return null;
         }
 
-        private void GenerateSubMesh(World world, BlockMaterial blockMaterial, List<BlockMaterial> listOfMaterials) {
-            var b = world.BlockDatabase.GetBlock(blockMaterial);
+        private void GenerateSubMesh(World world, Block b, List<Block> listOfMaterials) {
             if (b == null) {
-                Debug.LogWarning("Found no block for material " + blockMaterial);
+                Debug.LogWarning("Found no block for material " + b);
                 return;
             }
 
-            Debug.LogWarning("Generating mesh for block @ " + blockMaterial);
+            Debug.LogWarning("Generating mesh for block @ " + b);
             var chunkSize = world.ChunkSize;
             var chunkHeight = world.ChunkHeight;
             var builder = new MeshBuilder();
-            var chunkGO = new GameObject($"Chunk {chunkPosition} - SubMesh ({blockMaterial})");
+            var chunkGO = new GameObject($"Chunk {chunkPosition} - SubMesh ({b})");
             var t = chunkGO.transform;
             t.parent = transform;
             t.localPosition = Vector3.zero;
@@ -150,11 +157,10 @@ namespace Minecraft.Scripts.World.Chunks {
                             continue;
                         }
 
-                        var mat = currentBlock.Material;
 
-                        if (mat != blockMaterial) {
-                            if (!listOfMaterials.Contains(mat)) {
-                                listOfMaterials.Add(mat);
+                        if (currentBlock != b) {
+                            if (!listOfMaterials.Contains(currentBlock)) {
+                                listOfMaterials.Add(currentBlock);
                             }
 
                             continue;

@@ -88,6 +88,8 @@ MonoBehaviour:
       m_RotationOrder: 4
   Body: {fileID: 6723484181712294169}
   SpriteRenderer: {fileID: 1661847378026798705}
+  Rigidbody: {fileID: 8568997096586250037}
+  DropForce: 2
 --- !u!135 &3530411087132760953
 SphereCollider:
   m_ObjectHideFlags: 0

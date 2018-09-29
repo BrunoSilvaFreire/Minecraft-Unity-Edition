@@ -39,7 +39,8 @@ MonoBehaviour:
     digEvent: event:/SFX/World/Blocks/Grass/Grass_Dig
   opaque: 1
   hardness: 1
-  VisualMaterial: {fileID: 2100000, guid: 7c7776847f21eb0488a628645c130bc6, type: 2}
+  VisualMaterial: {fileID: 2100000, guid: a086ba29fb4b3ac4b9be09e1b4295e4f, type: 2}
+  SignatureColor: {r: 0.2572608, g: 0.671, b: 0.21747823, a: 1}
   Drops: []
 --- !u!114 &114104204515819304
 MonoBehaviour:
@@ -65,6 +66,59 @@ MonoBehaviour:
   opaque: 1
   hardness: 2
   VisualMaterial: {fileID: 2100000, guid: 6a969cd0365cb084fa4abb097a36f689, type: 2}
+  SignatureColor: {r: 0.764151, g: 0.764151, b: 0.764151, a: 1}
+  Drops: []
+--- !u!114 &114198773441606638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c440de701fe44ca8ef53d82f162fb3a, type: 3}
+  m_Name: GoldOre
+  m_EditorClassIdentifier: 
+  material:
+    id: 57
+    variation: 0
+  audio:
+    Proxy: 1
+    ProxyBlock: {fileID: 114104204515819304}
+    stepEvent: 
+    hitEvent: 
+    digEvent: 
+  opaque: 1
+  hardness: 1
+  VisualMaterial: {fileID: 2100000, guid: 16e45112ac1e4a44f8d7880d6ab9cbc1, type: 2}
+  SignatureColor: {r: 1, g: 0, b: 1, a: 1}
+  Drops: []
+--- !u!114 &114235635094152608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c440de701fe44ca8ef53d82f162fb3a, type: 3}
+  m_Name: Dirt
+  m_EditorClassIdentifier: 
+  material:
+    id: 3
+    variation: 0
+  audio:
+    Proxy: 0
+    ProxyBlock: {fileID: 0}
+    stepEvent: 
+    hitEvent: 
+    digEvent: 
+  opaque: 1
+  hardness: 0
+  VisualMaterial: {fileID: 2100000, guid: 7c7776847f21eb0488a628645c130bc6, type: 2}
+  SignatureColor: {r: 0.608, g: 0.46255687, b: 0.33618823, a: 1}
   Drops: []
 --- !u!114 &114260155196906244
 MonoBehaviour:
@@ -90,6 +144,7 @@ MonoBehaviour:
   opaque: 0
   hardness: 0
   VisualMaterial: {fileID: 0}
+  SignatureColor: {r: 1, g: 0, b: 1, a: 1}
   Drops: []
 --- !u!114 &114895956488309554
 MonoBehaviour:
@@ -115,6 +170,7 @@ MonoBehaviour:
   opaque: 1
   hardness: 3
   VisualMaterial: {fileID: 2100000, guid: 4e4eaceb39da7ca4ebb829aa7ecead8e, type: 2}
+  SignatureColor: {r: 0, g: 0.9590421, b: 1, a: 1}
   Drops:
   - MinAmount: 1
     MaxAmount: 4

@@ -60,8 +60,7 @@ namespace Minecraft.Scripts.Game {
                     Breaker.StopBreaking();
                 }
 
-                Vector3Int currentBlockPos;
-                hit = CastBreakRay(cam, out hitInfo, out currentBlockPos, out hitBlock, out blockMaterial);
+                hit = CastBreakRay(cam, out hitInfo, out var currentBlockPos, out hitBlock, out blockMaterial);
                 if (hit) {
                     if (currentBlockPos != lastBreakPos) {
                         Breaker.SetBreaking(currentBlockPos, hitBlock, blockMaterial);

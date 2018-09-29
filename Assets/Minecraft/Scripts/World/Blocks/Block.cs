@@ -19,7 +19,7 @@ namespace Minecraft.Scripts.World.Blocks {
         private float hardness;
 
         public Material VisualMaterial;
-
+        public Color SignatureColor = Color.magenta;
         public BlockMaterial Material => material;
 
         public bool Opaque => opaque;
