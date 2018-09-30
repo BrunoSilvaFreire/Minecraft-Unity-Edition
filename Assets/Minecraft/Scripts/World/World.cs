@@ -22,6 +22,7 @@ namespace Minecraft.Scripts.World {
         public bool RandomizeSeed;
         public int Seed;
         public bool RegenerateOnStart;
+        public bool GenerateSingleOnStart;
 
         public List<Chunk> LoadedChunks {
             get;
@@ -121,6 +122,11 @@ namespace Minecraft.Scripts.World {
                 Seed = Random.Range(int.MinValue, int.MaxValue);
             }
 
+            if (GenerateSingleOnStart) {
+                GetChunk(0, 0).GenerateMesh(this);
+                return;
+            }
+
             for (var x = -SpawnSize; x < SpawnSize; x++) {
                 for (var y = -SpawnSize; y < SpawnSize; y++) {
                     GetChunk(x, y);
@@ -201,6 +207,5 @@ namespace Minecraft.Scripts.World {
             var blockZ = (byte) Modulus(tilePos.z, ChunkSize);
             return new Vector3Int(blockX, tilePos.y, blockZ);
         }
-
     }
 }

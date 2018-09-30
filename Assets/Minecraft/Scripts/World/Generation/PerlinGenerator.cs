@@ -10,7 +10,7 @@ namespace Minecraft.Scripts.World.Generation {
         public int Octaves;
         public float Amplitude;
         public float GrassLevel;
-
+        public Block SolidBlock, AirBlock;
         public override void Populate(World world, ref ChunkData data, Vector2Int chunkPosition) {
             var db = world.BlockDatabase;
             var worldSize = (world.SpawnSize * world.ChunkSize * 2);
@@ -21,7 +21,7 @@ namespace Minecraft.Scripts.World.Generation {
                     var perlin = Mathf.PerlinNoise(pZ / worldSize, pX / worldSize) * PerlinScale;
                     var grass = perlin - GrassLevel;
                     for (byte y = 0; y < world.ChunkHeight; y++) {
-                        data[x, y, z] = perlin < y ? db.Air : (RandomUtility.NextBool() ? db.Grass : db.Stone);
+                        data[x, y, z] = perlin < y ? AirBlock : SolidBlock;
                     }
                 }
             }

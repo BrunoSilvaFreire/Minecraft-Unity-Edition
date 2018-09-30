@@ -51,3 +51,4 @@ MonoBehaviour:
         End: 6
       Probability: 50
   PerlinScale: 10
+  AirBlock: {fileID: 114260155196906244, guid: a648556678366cb4bac036594db90f5a, type: 2}

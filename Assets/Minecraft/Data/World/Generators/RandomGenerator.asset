@@ -4,7 +4,8 @@
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -12,6 +13,7 @@ MonoBehaviour:
   m_Name: RandomGenerator
   m_EditorClassIdentifier: 
   PerlinScale: 10
+  AirBlock: {fileID: 114260155196906244, guid: a648556678366cb4bac036594db90f5a, type: 2}
   Blocks:
   - {fileID: 114895956488309554, guid: a648556678366cb4bac036594db90f5a, type: 2}
   - {fileID: 114071646838245674, guid: a648556678366cb4bac036594db90f5a, type: 2}

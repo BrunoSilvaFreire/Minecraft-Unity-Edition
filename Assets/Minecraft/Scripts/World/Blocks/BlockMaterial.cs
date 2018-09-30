@@ -5,7 +5,7 @@ namespace Minecraft.Scripts.World.Blocks {
     [Serializable]
     public struct BlockMaterial {
         private const byte DefaultVariation = 0;
-        public static readonly BlockMaterial Unknown = new BlockMaterial(0);
+        public static readonly BlockMaterial Air = new BlockMaterial(0);
 
 
         [SerializeField]
@@ -13,6 +13,7 @@ namespace Minecraft.Scripts.World.Blocks {
 
         [SerializeField]
         private byte variation;
+
 
         public BlockMaterial(ushort id, byte variation = DefaultVariation) {
             this.id = id;

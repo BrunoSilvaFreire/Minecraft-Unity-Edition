@@ -165,7 +165,7 @@ namespace Minecraft.Scripts.World.Selection {
         }
 
         public void DeleteAll() {
-            SetAllTo(world.BlockDatabase.Air);
+            SetAllTo(world.BlockDatabase.GetBlock(BlockMaterial.Air));
         }
     }
 

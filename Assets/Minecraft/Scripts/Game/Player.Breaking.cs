@@ -31,7 +31,7 @@ namespace Minecraft.Scripts.Game {
             var world = Scripts.World.World.Instance;
             var db = world.BlockDatabase;
             var block = world.GetBlock(lastBreakPos);
-            world.SetBlock(lastBreakPos, db.Air);
+            world.SetBlock(lastBreakPos, db.GetBlock(BlockMaterial.Air));
             foreach (var drop in block.Drops) {
                 drop.Drop(BreakingParameters.ItemPrefab, lastBreakPos.AddHalf());
             }

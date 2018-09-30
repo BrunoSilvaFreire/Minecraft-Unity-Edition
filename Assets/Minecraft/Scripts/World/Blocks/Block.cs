@@ -4,6 +4,12 @@ using Minecraft.Scripts.Items.Misc;
 using UnityEngine;
 
 namespace Minecraft.Scripts.World.Blocks {
+    public enum BlockCompositionType : byte {
+        Invisible,
+        Translucent,
+        Opaque
+    }
+
     [CreateAssetMenu(menuName = "Minecraft/Block")]
     public class Block : ScriptableObject {
         [SerializeField]
@@ -13,7 +19,7 @@ namespace Minecraft.Scripts.World.Blocks {
         private BlockAudio audio;
 
         [SerializeField]
-        private bool opaque;
+        private BlockCompositionType composition;
 
         [SerializeField]
         private float hardness;
@@ -21,8 +27,9 @@ namespace Minecraft.Scripts.World.Blocks {
         public Material VisualMaterial;
         public Color SignatureColor = Color.magenta;
         public BlockMaterial Material => material;
+        public bool Opaque => composition == BlockCompositionType.Opaque;
 
-        public bool Opaque => opaque;
+        public BlockCompositionType Composition => composition;
 
         public float Hardness => hardness;
 
@@ -30,7 +37,7 @@ namespace Minecraft.Scripts.World.Blocks {
         public ItemDrop[] Drops;
 
         public override string ToString() {
-            return $"Block({nameof(material)}: {material}, {nameof(opaque)}: {opaque})";
+            return $"Block({nameof(material)}: {material}, {nameof(composition)}: {composition})";
         }
     }
 

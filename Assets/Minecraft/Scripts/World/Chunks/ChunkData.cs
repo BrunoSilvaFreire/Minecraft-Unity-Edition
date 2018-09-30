@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Minecraft.Scripts.Utility;
 using Minecraft.Scripts.World.Blocks;
 using UnityEngine;
 
 namespace Minecraft.Scripts.World.Chunks {
     [Serializable]
-    public class ChunkData {
+    public sealed class ChunkData {
+        [SerializeField]
+        private List<BlockMaterial> tableOfContent;
+
         [SerializeField]
         private Block[] data;
 
@@ -18,29 +24,34 @@ namespace Minecraft.Scripts.World.Chunks {
         }
 
         public Block[] Data {
-            get {
-                return data;
-            }
+            get => data;
+            set => data = value;
+        }
+
+        public IEnumerable<BlockMaterial> TableOfContent => tableOfContent;
+
+        public Block this[byte x, byte y, byte z] {
+            get => data[IndexOf(x, y, z)];
             set {
-                data = value;
+                CheckAddToTOC(value.Material);
+                data[IndexOf(x, y, z)] = value;
             }
         }
 
-        public Block this[byte x, byte y, byte z] {
-            get {
-                return data[IndexOf(x, y, z)];
+        private void CheckAddToTOC(BlockMaterial material) {
+            if (tableOfContent == null) {
+                tableOfContent = new List<BlockMaterial>();
             }
-            set {
-                data[IndexOf(x, y, z)] = value;
+            if (!tableOfContent.Contains(material)) {
+                tableOfContent.Add(material);
             }
         }
 
 
         public Block this[uint index] {
-            get {
-                return data[index];
-            }
+            get => data[index];
             set {
+                CheckAddToTOC(value.Material);
                 data[index] = value;
             }
         }
@@ -50,15 +61,7 @@ namespace Minecraft.Scripts.World.Chunks {
         public byte ChunkHeight => chunkHeight;
 
         public int IndexOf(byte x, byte y, byte z) {
-            return IndexOf(x, y, z, chunkSize, chunkHeight);
-        }
-
-        public static int IndexOf(int x, int y, int z, int width, int height) {
-            return x + width * (y + height * z);
-        }
-
-        public static int IndexOf(byte x, byte y, byte z, byte width, byte height) {
-            return x + width * (y + height * z);
+            return IndexingUtility.IndexOf(x, y, z, chunkSize, chunkHeight);
         }
 
 

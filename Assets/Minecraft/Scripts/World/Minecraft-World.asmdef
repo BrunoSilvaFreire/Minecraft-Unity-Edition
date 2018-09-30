@@ -2,12 +2,13 @@
     "name": "Minecraft-World",
     "references": [
         "Minecraft-Utility",
-        "Minecraft-Items"
+        "Minecraft-Items",
+        "Unity.Collections"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],
     "excludePlatforms": [],
-    "allowUnsafeCode": false,
+    "allowUnsafeCode": true,
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,

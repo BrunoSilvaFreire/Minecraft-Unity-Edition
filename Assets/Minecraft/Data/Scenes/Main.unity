@@ -1190,7 +1190,6 @@ GameObject:
   - component: {fileID: 614661942}
   - component: {fileID: 614661941}
   - component: {fileID: 614661940}
-  - component: {fileID: 614661943}
   - component: {fileID: 614661944}
   m_Layer: 0
   m_Name: Player
@@ -1243,6 +1242,7 @@ MonoBehaviour:
   ActiveEntityCameraPriority: 10
   InactiveEntityCameraPriority: 0
   ViewDistance: 2
+  AutomaticChunkHandling: 1
 --- !u!4 &614661942
 Transform:
   m_ObjectHideFlags: 0
@@ -1262,23 +1262,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1818360608 &614661943
-PositionConstraint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 614661939}
-  m_Enabled: 1
-  m_Weight: 1
-  m_TranslationAtRest: {x: 0, y: 0, z: 0}
-  m_TranslationOffset: {x: 0, y: 0, z: 0}
-  m_AffectTranslationX: 1
-  m_AffectTranslationY: 1
-  m_AffectTranslationZ: 1
-  m_IsContraintActive: 0
-  m_IsLocked: 0
-  m_Sources: []
 --- !u!114 &614661944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1846,6 +1829,36 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 224572290565857152, guid: f09dcdfec772e3c44a7ace746eec22fd, type: 3}
   m_PrefabInstance: {fileID: 764731060}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &806778001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 806778003}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &806778003
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 806778001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &862958511
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7742,15 +7755,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5016e6132714b1489b163ef2999f5b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SpawnSize: 2
-  ChunkSize: 8
-  ChunkHeight: 32
+  SpawnSize: 1
+  ChunkSize: 16
+  ChunkHeight: 64
   Generator: {fileID: 11400000, guid: 58e28bd6cfcb3cd4da35bdf3520400b7, type: 2}
   BlockDatabase: {fileID: 11400000, guid: a648556678366cb4bac036594db90f5a, type: 2}
-  ChunkMaterial: {fileID: 2100000, guid: 152d0159138b67a46a652d02bbef5b89, type: 2}
+  ChunkMaterial: {fileID: 0}
   RandomizeSeed: 1
-  Seed: 1971802200
+  Seed: 390196403
   RegenerateOnStart: 0
+  GenerateSingleOnStart: 0
 --- !u!4 &1704407062
 Transform:
   m_ObjectHideFlags: 0

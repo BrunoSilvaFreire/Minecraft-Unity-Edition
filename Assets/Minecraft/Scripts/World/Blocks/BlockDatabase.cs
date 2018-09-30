@@ -5,20 +5,10 @@ using UnityUtilities.Singletons;
 namespace Minecraft.Scripts.World.Blocks {
     [CreateAssetMenu(menuName = "Minecraft/BlockDatabase")]
     public class BlockDatabase : ScriptableObject {
-        public Block Air;
-        public Block Stone;
-        public Block Grass;
-        public Block DiamondOre;
-
-        public Block[] AllBlocks => new[] {
-            Air,
-            Stone,
-            Grass,
-            DiamondOre
-        };
+        public Block[] Blocks;
 
         public Block GetBlock(BlockMaterial material) {
-            return AllBlocks.FirstOrDefault(block => block.Material == material);
+            return Blocks.FirstOrDefault(block => block.Material == material);
         }
     }
 }

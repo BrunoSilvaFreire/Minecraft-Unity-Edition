@@ -8,6 +8,7 @@ namespace Minecraft.Scripts.World.Generation {
     [CreateAssetMenu(menuName = "Minecraft/Generators/RandomGenerator")]
     public class RandomWorldGenerator : WorldGenerator {
         public float PerlinScale = 1;
+        public Block AirBlock;
         public List<Block> Blocks;
         public float GrassLevel;
 
@@ -21,7 +22,7 @@ namespace Minecraft.Scripts.World.Generation {
                     var perlin = Mathf.PerlinNoise(pZ / worldSize, pX / worldSize) * PerlinScale;
                     var grass = perlin - GrassLevel;
                     for (byte y = 0; y < world.ChunkHeight; y++) {
-                        data[x, y, z] = perlin < y ? db.Air : Blocks.RandomElement();
+                        data[x, y, z] = perlin < y ? AirBlock : Blocks.RandomElement();
                     }
                 }
             }

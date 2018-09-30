@@ -98,6 +98,7 @@ namespace Minecraft.Scripts.World.Generation.Biomes {
         public CrustConfig Crust;
         public SubterraneanConfig Subterrain;
         public float PerlinScale = 5;
+        public Block AirBlock;
 
         public override void Populate(World world, ref ChunkData data, Vector2Int chunkPosition) {
             var worldSize = world.ChunkSize;
@@ -114,7 +115,7 @@ namespace Minecraft.Scripts.World.Generation.Biomes {
                     for (byte y = 0; y < worldHeight; y++) {
                         Block block;
                         if (y > height) {
-                            block = world.BlockDatabase.Air;
+                            block = AirBlock;
                         } else {
                             var offsetFromSurface = (byte) (height - y);
                             block = Crust.GetCrustBlockFor(offsetFromSurface);

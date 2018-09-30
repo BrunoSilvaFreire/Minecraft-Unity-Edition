@@ -4,9 +4,9 @@ using UnityEngine;
 namespace Minecraft.Scripts.Game {
     public partial class Player {
         public byte ViewDistance = 5;
-
+        public bool AutomaticChunkHandling = true;
         private void UpdateWorld() {
-            if (CurrentEntity == null) {
+            if (CurrentEntity == null || !AutomaticChunkHandling) {
                 return;
             }
 

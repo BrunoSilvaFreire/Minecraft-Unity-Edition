@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Minecraft.Scripts.Utility;
 using Minecraft.Scripts.World.Blocks;
 using Minecraft.Scripts.World.Chunks;
 using UnityEngine;
@@ -43,7 +44,7 @@ namespace Minecraft.Scripts.World.Structures {
                 for (var z = 0; z < size.z; z++) {
                     var chunk = world.GetChunkAt(x, z);
                     for (var y = 0; y < size.y; y++) {
-                        var index = ChunkData.IndexOf(x, y, z, size.x, size.y);
+                        var index = IndexingUtility.IndexOf(x, y, z, size.x, size.y);
                         var localTile = tiles[index];
                         if (localTile == null) {
                             continue;
