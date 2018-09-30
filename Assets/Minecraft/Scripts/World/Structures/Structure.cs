@@ -82,5 +82,38 @@ namespace Minecraft.Scripts.World.Structures {
                 chunk.GenerateMesh(World.Instance);
             }
         }
+        public static void PlaceOntoSilently(Chunk chunk, Vector3Int origin, Vector3Int size, Block[] tiles) {
+            var chunks = new List<Chunk>();
+            for (var x = 0; x < size.x; x++) {
+                for (var z = 0; z < size.z; z++) {
+                    for (var y = 0; y < size.y; y++) {
+                        var index = IndexingUtility.IndexOf(x, y, z, size.x, size.y);
+                        var localTile = tiles[index];
+                        if (localTile == null) {
+                            continue;
+                        }
+
+                        var chunkData = chunk.ChunkData;
+                        var tilePos = origin;
+                        tilePos.x += x;
+                        tilePos.y += y;
+                        tilePos.z += z;
+                        var localPos = origin;
+                        byte chunkBlockX = (byte) localPos.x, chunkBlockY = (byte) localPos.y, chunkBlockZ = (byte) localPos.z;
+                        var presentTile = chunkData[chunkBlockX, chunkBlockY, chunkBlockZ];
+                        if (localTile == presentTile) {
+                            continue;
+                        }
+
+                        if (!chunks.Contains(chunk)) {
+                            chunks.Add(chunk);
+                        }
+
+
+                        chunkData[chunkBlockX, chunkBlockY, chunkBlockZ] = localTile;
+                    }
+                }
+            }
+        }
     }
 }

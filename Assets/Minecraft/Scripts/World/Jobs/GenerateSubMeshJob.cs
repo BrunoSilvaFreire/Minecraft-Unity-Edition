@@ -215,107 +215,6 @@ namespace Minecraft.Scripts.World.Jobs {
         }
     }
 
-    /*public struct GenerateMeshJob : IJob, IDisposable {
-        private GenerateMeshJobData chunkData;
-
-        private NativeList<ChunkMesh> meshes;
-
-
-        public GenerateMeshJob(GenerateMeshJobData chunkData) : this() {
-            this.chunkData = chunkData;
-            this.meshes = new NativeList<ChunkMesh>(Allocator.TempJob);
-        }
-
-        public NativeList<ChunkMesh> Meshes => meshes;
-
-        public void Execute() {
-            var firstMatCandidate = FindFirstOpaqueBlock();
-            if (firstMatCandidate == null) {
-                Debug.LogWarning("Mesh generation cancelled because no opaque block was found!");
-                return;
-            }
-
-            var firstMat = firstMatCandidate.Value;
-            var pendingMaterials = new Queue<BlockMaterial>();
-            pendingMaterials.Enqueue(firstMat);
-            var completedMaterials = new List<BlockMaterial>();
-            while (pendingMaterials.Count > 0) {
-                var mat = pendingMaterials.Dequeue();
-                completedMaterials.Add(mat);
-                meshes.Add(GenerateSubMesh(mat, pendingMaterials, completedMaterials));
-            }
-        }
-
-        private BlockMaterial? FindFirstOpaqueBlock() {
-            var chunkSize = chunkData.ChunkWidth;
-            var chunkHeight = chunkData.ChunkHeight;
-            for (byte x = 0; x < chunkSize; x++) {
-                for (byte y = 0; y < chunkHeight; y++) {
-                    for (byte z = 0; z < chunkSize; z++) {
-                        var block = chunkData[x, y, z];
-                        if (block.Shape.CompositionType == BlockCompositionType.Opaque) {
-                            return block.Material;
-                        }
-                    }
-                }
-            }
-
-            return null;
-        }
-
-
-        private ChunkMesh GenerateSubMesh(BlockMaterial material, Queue<BlockMaterial> pendingMaterials, List<BlockMaterial> completedMaterials) {
-            Debug.LogWarning($"Generating mesh for block @ {material}");
-            var chunkSize = chunkData.ChunkWidth;
-            var chunkHeight = chunkData.ChunkHeight;
-            var builder = new MeshBuilder();
-            for (byte x = 0; x < chunkSize; x++) {
-                for (byte y = 0; y < chunkHeight; y++) {
-                    for (byte z = 0; z < chunkSize; z++) {
-                        var currentBlock = chunkData[x, y, z];
-                        if (!currentBlock.Shape.IsVisible) {
-                            continue;
-                        }
-
-                        var currentMaterial = currentBlock.Material;
-
-                        if (currentMaterial != material) {
-                            if (!completedMaterials.Contains(currentMaterial)) {
-                                pendingMaterials.Enqueue(currentMaterial);
-                            }
-
-                            continue;
-                        }
-
-                        foreach (var face in BlockFaces.Faces) {
-                            var dir = face.ToDirection();
-                            var isTopOrBottom = y == 0 && dir.y < 0 || y == chunkHeight - 1 && dir.y > 0;
-                            if (!isTopOrBottom || chunkData.GetBlock(x, y, z, dir).IsVisible) {
-                                continue;
-                            }
-
-                            builder.AddFace(x, y, z, face);
-                        }
-                    }
-                }
-            }
-
-            return new ChunkMesh(
-                builder
-            );
-        }
-
-        public void Dispose() {
-            chunkData.Dispose();
-            for (var i = 0; i < meshes.Length; i++) {
-                meshes[i].Dispose();
-            }
-
-            meshes.Dispose();
-        }
-    }
-*/
-
     public struct GenerateSubMeshJob : IJob, IDisposable {
         private GenerateMeshJobData chunkData;
 
@@ -393,4 +292,5 @@ namespace Minecraft.Scripts.World.Jobs {
             return mesh;
         }
     }
+    
 }

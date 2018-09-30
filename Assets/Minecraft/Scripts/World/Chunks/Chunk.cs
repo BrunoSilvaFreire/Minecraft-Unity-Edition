@@ -81,7 +81,7 @@ namespace Minecraft.Scripts.World.Chunks {
             foreach (var mat in chunkData.TableOfContent) {
                 var job = new GenerateSubMeshJob(data, mat);
                 var handle = job.Schedule();
-                StartCoroutine(WaitForSubMesh(job, handle, world.BlockDatabase.GetBlock(mat).VisualMaterial, mat, data));
+                StartCoroutine(WaitForSubMesh(job, handle, world.BlockDatabase.GetBlock(mat).VisualMaterial, mat));
                 handles.Add(handle);
             }
 
@@ -98,7 +98,7 @@ namespace Minecraft.Scripts.World.Chunks {
             data.Dispose();
         }
 
-        private IEnumerator WaitForSubMesh(GenerateSubMeshJob job, JobHandle handle, Material mat, BlockMaterial material, GenerateMeshJobData data) {
+        private IEnumerator WaitForSubMesh(GenerateSubMeshJob job, JobHandle handle, Material mat, BlockMaterial material) {
 #if UNITY_EDITOR
             if (!EditorApplication.isPlaying) {
                 handle.Complete();
@@ -107,6 +107,8 @@ namespace Minecraft.Scripts.World.Chunks {
             while (!handle.IsCompleted) {
                 yield return null;
             }
+
+            handle.Complete();
 
             var chunkGO = new GameObject($"Chunk {chunkPosition} - SubMesh ({material})");
             var t = chunkGO.transform;
@@ -124,6 +126,11 @@ namespace Minecraft.Scripts.World.Chunks {
         }
 
         public void GenerateMesh(World world) {
+            Debug.Log($"Generating mesh @ chunk {chunkPosition}");
+            if (!isMeshGenerated) {
+                isMeshGenerated = true;
+            }
+
             GenerateMeshAsync(world);
         }
 
@@ -134,9 +141,6 @@ namespace Minecraft.Scripts.World.Chunks {
                 return;
             }
 
-            if (!isMeshGenerated) {
-                isMeshGenerated = true;
-            }
 
             ClearOldMeshes();
             var listOfMaterials = new List<Block>();
