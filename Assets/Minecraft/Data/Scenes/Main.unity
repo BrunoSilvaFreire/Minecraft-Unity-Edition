@@ -1241,7 +1241,7 @@ MonoBehaviour:
   CurrentEntity: {fileID: 124492730}
   ActiveEntityCameraPriority: 10
   InactiveEntityCameraPriority: 0
-  ViewDistance: 5
+  ViewDistance: 2
   AutomaticChunkHandling: 1
 --- !u!4 &614661942
 Transform:
@@ -1829,36 +1829,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 224572290565857152, guid: f09dcdfec772e3c44a7ace746eec22fd, type: 3}
   m_PrefabInstance: {fileID: 764731060}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &806778001
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 806778003}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &806778003
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 806778001}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &862958511
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7758,7 +7728,7 @@ MonoBehaviour:
   SpawnSize: 5
   ChunkSize: 16
   ChunkHeight: 64
-  Generator: {fileID: 11400000, guid: be9938db0b0e1724bbbb444cda1f5bf2, type: 2}
+  Generator: {fileID: 11400000, guid: 58e28bd6cfcb3cd4da35bdf3520400b7, type: 2}
   BlockDatabase: {fileID: 11400000, guid: a648556678366cb4bac036594db90f5a, type: 2}
   ChunkMaterial: {fileID: 0}
   RandomizeSeed: 1

@@ -85,8 +85,8 @@ namespace Minecraft.Scripts.World {
             return GetChunk(chunkX, chunkY, loadIfNotPresent);
         }
 
-        private Chunk LoadChunk(Vector2Int position, bool generateMesh = false) {
-            var obj = new GameObject($"Chunk {position}");
+        private Chunk LoadChunk(Vector2Int position) {
+            var obj = new GameObject($"Chunk ({position})");
             obj.transform.parent = transform;
             var chunk = obj.AddComponent<Chunk>();
             var data = new ChunkData(ChunkSize, ChunkHeight);
