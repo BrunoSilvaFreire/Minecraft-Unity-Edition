@@ -3,6 +3,7 @@ using Cinemachine;
 using Minecraft.Scripts.Game.World;
 using Minecraft.Scripts.Items;
 using Minecraft.Scripts.World.Blocks;
+using Minecraft.Scripts.World.Chunks;
 using Minecraft.Scripts.World.Utilities;
 using UnityEngine;
 using UnityUtilities;
@@ -31,6 +32,7 @@ namespace Minecraft.Scripts.Game {
             var world = Scripts.World.World.Instance;
             var db = world.BlockDatabase;
             var block = world.GetBlock(lastBreakPos);
+            Debug.Log("sSetting blocok @ " + lastBreakPos + " to air");
             world.SetBlock(lastBreakPos, db.GetBlock(BlockMaterial.Air));
             foreach (var drop in block.Drops) {
                 drop.Drop(BreakingParameters.ItemPrefab, lastBreakPos.AddHalf());
@@ -55,9 +57,11 @@ namespace Minecraft.Scripts.Game {
             Block hitBlock;
             Material blockMaterial;
             bool hit;
+            //TODO: Make this better
             if (Breaker.Breaking) {
                 if (!playerPressingBreak) {
                     Breaker.StopBreaking();
+                    return;
                 }
 
                 hit = CastBreakRay(cam, out hitInfo, out var currentBlockPos, out hitBlock, out blockMaterial);
@@ -67,6 +71,8 @@ namespace Minecraft.Scripts.Game {
                     }
 
                     lastBreakPos = currentBlockPos;
+                } else {
+                    Breaker.StopBreaking();
                 }
             } else {
                 hit = CastBreakRay(cam, out hitInfo, out lastBreakPos, out hitBlock, out blockMaterial);
@@ -85,10 +91,12 @@ namespace Minecraft.Scripts.Game {
             }
         }
 
-        private bool CastBreakRay(CinemachineVirtualCamera cam, out RaycastHit hit, out Vector3Int blockPosition, out Block hitBlock, out Material blockMaterial) {
+        private bool CastBreakRay(CinemachineVirtualCamera cam, out RaycastHit hit, out Vector3Int blockPosition,
+            out Block hitBlock, out Material blockMaterial) {
             var cameraTransform = cam.transform;
             var dir = cameraTransform.forward;
-            var result = Physics.Raycast(cameraTransform.position, dir, out hit, BreakingParameters.BreakDistance, BreakingParameters.BreakableLayerMask);
+            var result = Physics.Raycast(cameraTransform.position, dir, out hit, BreakingParameters.BreakDistance,
+                BreakingParameters.BreakableLayerMask);
             var blockPos = hit.point + -hit.normal * BreakingParameters.BreakRaycastEpsilon;
 
 
@@ -101,7 +109,8 @@ namespace Minecraft.Scripts.Game {
                 blockPosition.z--;
             }
 
-            if (!result) {
+            var chunk = result ? hit.collider.GetComponentInParent<Chunk>() : null;
+            if (!result || chunk != null && !chunk.MeshGenerationStatus.IsFinished) {
                 hitBlock = null;
                 blockMaterial = null;
                 return false;

@@ -1241,7 +1241,7 @@ MonoBehaviour:
   CurrentEntity: {fileID: 124492730}
   ActiveEntityCameraPriority: 10
   InactiveEntityCameraPriority: 0
-  ViewDistance: 2
+  ViewDistance: 8
   AutomaticChunkHandling: 1
 --- !u!4 &614661942
 Transform:

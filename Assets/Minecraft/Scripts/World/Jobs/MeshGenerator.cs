@@ -46,10 +46,8 @@ namespace Minecraft.Scripts.World.Jobs {
             pending.Enqueue(data[0]);
             var completed = new HashSet<Block>();
             var meshes = new List<Tuple<MeshBuilder, Block>>();
-            Debug.Log("Executing job " + job);
             do {
                 var current = pending.Dequeue();
-                Debug.Log("Generating sub mesh for " + current);
                 meshes.Add(new Tuple<MeshBuilder, Block>(GenerateSubMesh(current, data, pending, completed), current));
                 completed.Add(current);
             } while (pending.Count > 0);

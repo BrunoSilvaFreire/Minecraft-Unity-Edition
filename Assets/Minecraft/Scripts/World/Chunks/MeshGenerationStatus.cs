@@ -76,13 +76,11 @@ namespace Minecraft.Scripts.World.Chunks {
                 chunk,
                 delegate(List<Tuple<MeshBuilder, Block>> meshes) { finishedMeshes = meshes; }
             ));
-            Debug.Log("Enqueued job");
             while (finishedMeshes == null) {
                 yield return null;
             }
 
-            Debug.Log("finished job");
-
+            chunk.ClearMeshes();
             foreach (var tuple in finishedMeshes) {
                 var block = tuple.Item2;
                 var chunkGO = new GameObject($"Chunk {chunk.ChunkPosition} - SubMesh ({block.Material})");
@@ -97,6 +95,8 @@ namespace Minecraft.Scripts.World.Chunks {
                 filter.sharedMesh = mesh;
                 col.sharedMesh = mesh;
             }
+
+            State = GenerationState.Finished;
         }
     }
 }

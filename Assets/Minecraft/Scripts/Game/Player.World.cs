@@ -24,7 +24,7 @@ namespace Minecraft.Scripts.Game {
                     var yPos = y + pos.y;
                     var chunk = world.GetChunk(xPos, yPos);
                     if (!chunk.IsMeshGenerated) {
-                        chunk.GenerateMesh(world);
+                        chunk.GenerateMesh(world, false);
                     }
                 }
             }

@@ -106,7 +106,7 @@ namespace Minecraft.Scripts.World.Chunks {
             CompositionGenerationStatus.UpdateStatus(GenerationState.Finished);
         }
 
-        public void GenerateMesh(World world, bool cancelCurrentGeneration = false) {
+        public void GenerateMesh(World world, bool cancelCurrentGeneration = true) {
             if (compositionGenerationStatus.State != GenerationState.Finished) {
                 GenerateComposition(world);
             }
@@ -121,15 +121,13 @@ namespace Minecraft.Scripts.World.Chunks {
             }
 
 
-            ClearOldMeshes();
-
             meshGenerationStatus = new MeshGenerationStatus(this);
             meshGenerationStatus.Generate(world);
         }
 
         private bool shouldClearMeshes;
 
-        private void ClearOldMeshes() {
+        public void ClearMeshes() {
             for (var i = 0; i < transform.childCount; i++) {
                 var obj = transform.GetChild(i).gameObject;
 #if UNITY_EDITOR
