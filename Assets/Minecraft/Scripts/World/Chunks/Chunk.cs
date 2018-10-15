@@ -55,10 +55,11 @@ namespace Minecraft.Scripts.World.Chunks {
 
                 return chunkData;
             }
+            set => chunkData = value;
         }
 
 
-        public void Initialize(Material chunkMaterial, Vector2Int position, ChunkData data) {
+        public void Initialize(Vector2Int position, ChunkData data) {
             if (ChunkInitialized) {
                 return;
             }
@@ -68,23 +69,57 @@ namespace Minecraft.Scripts.World.Chunks {
             chunkData = data;
         }
 
-        private bool isMeshGenerating;
-
-
+        private CompositionGenerationStatus compositionGenerationStatus;
         private MeshGenerationStatus meshGenerationStatus;
+
+        public CompositionGenerationStatus CompositionGenerationStatus => compositionGenerationStatus;
+
+        public MeshGenerationStatus MeshGenerationStatus => meshGenerationStatus;
 
         public bool IsMeshGenerated {
             get {
+                if (compositionGenerationStatus.State != GenerationState.Finished) {
+                    return false;
+                }
+
                 return meshGenerationStatus != null && meshGenerationStatus.IsFinishedOrGenerating;
             }
         }
 
-        public void GenerateMeshAsync(World world) {
+        public void GenerateComposition(World world) {
+            if (compositionGenerationStatus != null && compositionGenerationStatus.State != GenerationState.Idle) {
+                return;
+            }
+
+            compositionGenerationStatus = new CompositionGenerationStatus();
+            compositionGenerationStatus.UpdateStatus(GenerationState.Waiting);
+
+            var job = new PopulateJob(OnBeginCompositionGeneration, OnFinishedCompositionGeneration, this);
+            world.Populator.Enqueue(job);
+        }
+
+        private void OnBeginCompositionGeneration() {
+            CompositionGenerationStatus.UpdateStatus(GenerationState.Generating);
+        }
+
+        private void OnFinishedCompositionGeneration() {
+            CompositionGenerationStatus.UpdateStatus(GenerationState.Finished);
+        }
+
+        public void GenerateMesh(World world, bool cancelCurrentGeneration = false) {
+            if (compositionGenerationStatus.State != GenerationState.Finished) {
+                GenerateComposition(world);
+            }
+
             var currentState = meshGenerationStatus;
             if (currentState != null && !currentState.IsFinished) {
-                currentState.Cancel();
+                if (cancelCurrentGeneration) {
+                    currentState.Cancel();
+                } else {
+                    return;
+                }
             }
-            Debug.Log($"Generating mesh @ chunk {chunkPosition}");
+
 
             ClearOldMeshes();
 
@@ -92,10 +127,7 @@ namespace Minecraft.Scripts.World.Chunks {
             meshGenerationStatus.Generate(world);
         }
 
-
-        public void GenerateMesh(World world) {
-            GenerateMeshAsync(world);
-        }
+        private bool shouldClearMeshes;
 
         private void ClearOldMeshes() {
             for (var i = 0; i < transform.childCount; i++) {
@@ -108,99 +140,6 @@ namespace Minecraft.Scripts.World.Chunks {
 #endif
                 Destroy(obj);
             }
-        }
-
-        private Block FindPendingMaterial(List<Block> listOfMaterials, List<Block> completedMaterials) {
-            foreach (var candidate in listOfMaterials) {
-                if (completedMaterials.Contains(candidate)) {
-                    continue;
-                }
-
-                return candidate;
-            }
-
-            return null;
-        }
-
-        private Block FindFirstOpaqueBlock() {
-            var chunkSize = chunkData.ChunkSize;
-            var chunkHeight = chunkData.ChunkHeight;
-            for (byte x = 0; x < chunkSize; x++) {
-                for (byte y = 0; y < chunkHeight; y++) {
-                    for (byte z = 0; z < chunkSize; z++) {
-                        var block = chunkData[x, y, z];
-                        if (block.Opaque) {
-                            return block;
-                        }
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        private void GenerateSubMesh(World world, Block b, List<Block> listOfMaterials) {
-            if (b == null) {
-                Debug.LogWarning("Found no block for material " + b);
-                return;
-            }
-
-            Debug.LogWarning("Generating mesh for block @ " + b);
-            var chunkSize = world.ChunkSize;
-            var chunkHeight = world.ChunkHeight;
-            var builder = new MeshBuilder();
-            var chunkGO = new GameObject($"Chunk {chunkPosition} - SubMesh ({b})");
-            var t = chunkGO.transform;
-            t.parent = transform;
-            t.localPosition = Vector3.zero;
-            var filter = chunkGO.AddComponent<MeshFilter>();
-            var col = chunkGO.AddComponent<MeshCollider>();
-            var ren = chunkGO.AddComponent<MeshRenderer>();
-
-            ren.material = b.VisualMaterial;
-            for (byte x = 0; x < chunkSize; x++) {
-                for (byte y = 0; y < chunkHeight; y++) {
-                    for (byte z = 0; z < chunkSize; z++) {
-                        var currentBlockPos = new Vector3Int(x + chunkPosition.x * world.ChunkSize, y,
-                            z + chunkPosition.y * world.ChunkSize);
-                        var currentBlock = world.GetBlock(currentBlockPos, true);
-
-                        if (currentBlock == null) {
-                            Debug.LogError($"Block @ {currentBlockPos} is null!");
-                            continue;
-                        }
-
-                        if (!currentBlock.Opaque) {
-                            continue;
-                        }
-
-
-                        if (currentBlock != b) {
-                            if (!listOfMaterials.Contains(currentBlock)) {
-                                listOfMaterials.Add(currentBlock);
-                            }
-
-                            continue;
-                        }
-
-                        foreach (var face in BlockFaces.Faces) {
-                            var dir = face.ToDirection();
-                            var worldPos = currentBlockPos + dir;
-                            var neightboor = world.GetBlock(worldPos, false);
-                            if (neightboor == null || neightboor.Opaque) {
-                                continue;
-                            }
-
-
-                            builder.AddFace(x, y, z, face);
-                        }
-                    }
-                }
-            }
-
-            var mesh = builder.Build();
-            filter.sharedMesh = mesh;
-            col.sharedMesh = mesh;
         }
     }
 

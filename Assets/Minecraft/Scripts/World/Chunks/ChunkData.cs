@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Minecraft.Scripts.Utility;
 using Minecraft.Scripts.World.Blocks;
 using UnityEngine;
@@ -42,6 +43,7 @@ namespace Minecraft.Scripts.World.Chunks {
             if (tableOfContent == null) {
                 tableOfContent = new List<BlockMaterial>();
             }
+
             if (!tableOfContent.Contains(material)) {
                 tableOfContent.Add(material);
             }
@@ -77,6 +79,15 @@ namespace Minecraft.Scripts.World.Chunks {
 
         private bool IsWithinBounds(int x, int y, int z) {
             return x >= 0 && y >= 0 && z >= 0 && x < chunkSize && y < chunkHeight && z < chunkSize;
+        }
+
+        public void PrintData() {
+            var buffer = new StringBuilder();
+            foreach (var block in data) {
+                buffer.Append(block == null ? "null" : block.Material + ", ");
+            }
+
+            Debug.Log(buffer.ToString());
         }
     }
 }

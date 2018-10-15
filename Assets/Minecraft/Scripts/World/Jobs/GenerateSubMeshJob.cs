@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using Minecraft.Scripts.Utility;
 using Minecraft.Scripts.World.Blocks;
 using Minecraft.Scripts.World.Chunks;
 using Minecraft.Scripts.World.Utilities;
 using Unity.Collections;
-using Unity.Collections.LowLevel.Unsafe;
 using Unity.Jobs;
 using UnityEngine;
 
@@ -141,7 +139,7 @@ namespace Minecraft.Scripts.World.Jobs {
                 for (var y = originY; y < limit.y; y++) {
                     for (var z = originZ; z < limit.z; z++) {
                         var block = data[x, y, z];
-                        buffer[currentBlock++] = new BlockShape(block.Composition);
+                        buffer[currentBlock++] = new BlockShape(block != null ? block.Composition : BlockCompositionType.Invisible);
                     }
                 }
             }

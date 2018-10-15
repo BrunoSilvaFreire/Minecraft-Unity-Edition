@@ -74,7 +74,7 @@ namespace Minecraft.Scripts.World.Editor {
                 var fZ = z + dir.z;
                 Block neighbor;
                 if (data.TryGet(fX, fY, fZ, out neighbor)) {
-                    if (neighbor == null || neighbor.Opaque) {
+                    if (neighbor == null || neighbor.Visible) {
                         continue;
                     }
 
@@ -92,7 +92,10 @@ namespace Minecraft.Scripts.World.Editor {
             if (chunk == null) {
                 return;
             }
+
             using (var scope = new EditorGUI.DisabledScope(true)) {
+                EditorGUILayout.EnumPopup("Composition State", chunk.CompositionGenerationStatus.State);
+                EditorGUILayout.EnumPopup("Mesh State", chunk.MeshGenerationStatus.State);
                 EditorGUILayout.Toggle("Mesh Generated", chunk.IsMeshGenerated);
             }
         }
@@ -117,6 +120,10 @@ namespace Minecraft.Scripts.World.Editor {
                 return;
             }
 
+            if (!Configs.ShowBlocks && !Configs.ShowLabels) {
+                return;
+            }
+
             for (byte x = 0; x < worldSize; x++) {
                 for (byte y = 0; y < worldHeight; y++) {
                     for (byte z = 0; z < worldSize; z++) {
@@ -124,7 +131,8 @@ namespace Minecraft.Scripts.World.Editor {
                         var block = cData[x, y, z];
                         var debugBlock = data[x, y, z];
                         if (Configs.ShowBlocks) {
-                            Handles.color = block.SignatureColor;
+                            Handles.color = block == null ? Color.magenta : block.SignatureColor;
+
                             if (!debugBlock.IsOccluded && !Configs.ShowAsWire) {
                                 Handles.CubeHandleCap(0, blockPosition, Quaternion.identity, 1, EventType.Repaint);
                             } else {
@@ -133,7 +141,7 @@ namespace Minecraft.Scripts.World.Editor {
                         }
 
                         if (Configs.ShowLabels) {
-                            Handles.Label(blockPosition, block.ToString());
+                            Handles.Label(blockPosition,  block == null ? "null block!" : block.ToString());
                         }
                     }
                 }

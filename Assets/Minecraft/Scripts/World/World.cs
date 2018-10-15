@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Minecraft.Scripts.Utility;
 using Minecraft.Scripts.World.Blocks;
 using Minecraft.Scripts.World.Chunks;
 using Minecraft.Scripts.World.Generation;
+using Minecraft.Scripts.World.Jobs;
 using UnityEngine;
 using UnityUtilities.Singletons;
+using Random = UnityEngine.Random;
 #if UNITY_EDITOR
 using UnityEditor;
 
@@ -23,10 +26,24 @@ namespace Minecraft.Scripts.World {
         public int Seed;
         public bool RegenerateOnStart;
         public bool GenerateSingleOnStart;
+        public float PerlinScale;
+
+        public Populator Populator;
+        public MeshGenerator MeshGenerator;
 
         public List<Chunk> LoadedChunks {
             get;
         } = new List<Chunk>();
+
+        private void OnEnable() {
+            MeshGenerator.Initialize();
+            Populator.Initialize(this);
+        }
+
+        private void OnDisable() {
+            MeshGenerator.TerminateWorkers();
+            Populator.TerminateWorkers();
+        }
 
         private void Start() {
             if (RegenerateOnStart) {
@@ -51,7 +68,9 @@ namespace Minecraft.Scripts.World {
 
         public Chunk GetChunk(Vector2Int position, bool loadIfNotPresent = true) {
             Chunk cachedEntry = null;
-            foreach (var chunk in LoadedChunks) {
+
+            for (var i = 0; i < LoadedChunks.Count; i++) {
+                var chunk = LoadedChunks[i];
                 if (chunk.ChunkPosition == position) {
                     cachedEntry = chunk;
                     break;
@@ -90,8 +109,8 @@ namespace Minecraft.Scripts.World {
             obj.transform.parent = transform;
             var chunk = obj.AddComponent<Chunk>();
             var data = new ChunkData(ChunkSize, ChunkHeight);
-            Generator.Populate(this, ref data, position);
-            chunk.Initialize(ChunkMaterial, position, data);
+            chunk.Initialize(position, data);
+            chunk.GenerateComposition(this);
             chunk.transform.position = new Vector3(position.x * ChunkSize, 0, position.y * ChunkSize);
             LoadedChunks.Add(chunk);
             return chunk;

@@ -10,8 +10,10 @@ namespace Minecraft.Scripts.Utility {
 
     [Serializable]
     public sealed class UInt8Range : AbstractRange<byte> {
+        public static readonly Random random = new Random();
+
         public byte Evaluate() {
-            return (byte) UnityEngine.Random.Range(Start, End);
+            return (byte) random.Next(Start, End);
         }
     }
 

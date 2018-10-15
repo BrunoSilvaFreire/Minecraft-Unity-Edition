@@ -1,29 +1,43 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using Minecraft.Scripts.Utility;
 using Minecraft.Scripts.World.Blocks;
 using Minecraft.Scripts.World.Jobs;
-using Unity.Jobs;
-using UnityEditor;
 using UnityEngine;
 
 namespace Minecraft.Scripts.World.Chunks {
-    public sealed class MeshGenerationStatus {
-        public enum GenerationState {
-            Idle,
-            Generating,
-            Finished
+    public enum GenerationState {
+        Idle,
+        Waiting,
+        Generating,
+        Finished
+    }
+
+    public sealed class CompositionGenerationStatus {
+        private GenerationState state;
+
+        public GenerationState State => state;
+
+        public CompositionGenerationStatus() {
+            state = GenerationState.Idle;
         }
 
+        public void UpdateStatus(GenerationState state) {
+            this.state = state;
+        }
+    }
+
+    public sealed class MeshGenerationStatus {
         public GenerationState State {
             get;
             private set;
         }
 
-        private readonly List<Coroutine> meshRoutines = new List<Coroutine>();
         private Chunk chunk;
         public bool IsFinishedOrGenerating => State != GenerationState.Idle;
         public bool IsFinished => State == GenerationState.Finished;
+        private Coroutine coroutine;
 
         public MeshGenerationStatus(Chunk chunk) {
             this.chunk = chunk;
@@ -31,67 +45,57 @@ namespace Minecraft.Scripts.World.Chunks {
         }
 
         public void Generate(World world) {
-            State = GenerationState.Generating;
-            foreach (var meshRoutine in meshRoutines) {
-                chunk.StopCoroutine(meshRoutine);
+            if (State != GenerationState.Idle) {
+                return;
             }
 
-            meshRoutines.Clear();
-            var data = GenerateMeshJobData.From(chunk, world);
-            var handles = new List<JobHandle>();
-            var chunkData = chunk.ChunkData;
-            foreach (var mat in chunkData.TableOfContent) {
-                var job = new GenerateSubMeshJob(data, mat);
-                var handle = job.Schedule();
-                meshRoutines.Add(chunk.StartCoroutine(WaitForSubMesh(job, handle,
-                    world.BlockDatabase.GetBlock(mat).VisualMaterial, mat)));
-                handles.Add(handle);
-            }
-
-            chunk.StartCoroutine(WaitForHandlesAndDispose(handles, data));
-        }
-
-        private IEnumerator WaitForHandlesAndDispose(List<JobHandle> handles, GenerateMeshJobData data) {
-            var finished = false;
-            while (!finished) {
-                finished = handles.All(handle => handle.IsCompleted);
-                yield return null;
-            }
-
-            data.Dispose();
-            State = GenerationState.Finished;
-        }
-
-        private IEnumerator WaitForSubMesh(GenerateSubMeshJob job, JobHandle handle, Material mat,
-            BlockMaterial material) {
-#if UNITY_EDITOR
-            if (!EditorApplication.isPlaying) {
-                handle.Complete();
-            }
-#endif
-            while (!handle.IsCompleted) {
-                yield return null;
-            }
-
-            handle.Complete();
-
-            var chunkGO = new GameObject($"Chunk {chunk.ChunkPosition} - SubMesh ({material})");
-            var t = chunkGO.transform;
-            t.parent = chunk.transform;
-            t.localPosition = Vector3.zero;
-            var filter = chunkGO.AddComponent<MeshFilter>();
-            var col = chunkGO.AddComponent<MeshCollider>();
-            var ren = chunkGO.AddComponent<MeshRenderer>();
-            ren.material = mat;
-            var mesh = job.Build();
-            filter.sharedMesh = mesh;
-            col.sharedMesh = mesh;
-            job.Dispose();
+            coroutine = chunk.StartCoroutine(BeginGeneration(world));
         }
 
         public void Cancel() {
-            foreach (var meshRoutine in meshRoutines) {
-                chunk.StopCoroutine(meshRoutine);
+            chunk.StopCoroutine(coroutine);
+        }
+
+        private IEnumerator BeginGeneration(World world) {
+            State = GenerationState.Waiting;
+            var status = chunk.CompositionGenerationStatus;
+            if (status == null) {
+                yield break;
+            }
+
+            while (status.State != GenerationState.Finished) {
+                yield return null;
+            }
+
+            State = GenerationState.Generating;
+
+            List<Tuple<MeshBuilder, Block>> finishedMeshes = null;
+            world.MeshGenerator.Enqueue(new MeshJob(
+                delegate { },
+                delegate { },
+                chunk,
+                delegate(List<Tuple<MeshBuilder, Block>> meshes) { finishedMeshes = meshes; }
+            ));
+            Debug.Log("Enqueued job");
+            while (finishedMeshes == null) {
+                yield return null;
+            }
+
+            Debug.Log("finished job");
+
+            foreach (var tuple in finishedMeshes) {
+                var block = tuple.Item2;
+                var chunkGO = new GameObject($"Chunk {chunk.ChunkPosition} - SubMesh ({block.Material})");
+                var t = chunkGO.transform;
+                t.parent = chunk.transform;
+                t.localPosition = Vector3.zero;
+                var filter = chunkGO.AddComponent<MeshFilter>();
+                var col = chunkGO.AddComponent<MeshCollider>();
+                var ren = chunkGO.AddComponent<MeshRenderer>();
+                ren.material = block.VisualMaterial;
+                var mesh = tuple.Item1.Build();
+                filter.sharedMesh = mesh;
+                col.sharedMesh = mesh;
             }
         }
     }

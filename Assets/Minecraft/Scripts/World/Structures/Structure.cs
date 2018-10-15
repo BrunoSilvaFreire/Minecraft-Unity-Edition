@@ -19,7 +19,8 @@ namespace Minecraft.Scripts.World.Structures {
             this.size = size;
         }
 
-        private static void CheckAdd(World world, Vector3Int originalPos, ICollection<Chunk> chunks, Vector2Int direction) {
+        private static void CheckAdd(World world, Vector3Int originalPos, ICollection<Chunk> chunks,
+            Vector2Int direction) {
             var tilePos = originalPos;
             tilePos.x += direction.x;
             tilePos.z += direction.y;
@@ -38,11 +39,16 @@ namespace Minecraft.Scripts.World.Structures {
             PlaceOnto(world, origin, size, tiles);
         }
 
-        public static void PlaceOnto(World world, Vector3Int origin, Vector3Int size, Block[] tiles) {
+        public static void PlaceOnto(World world, Vector3Int origin, Vector3Int size, Block[] tiles,
+            bool loadChunksIfNotPresent = true, bool updateChunks = true) {
             var chunks = new List<Chunk>();
             for (var x = 0; x < size.x; x++) {
                 for (var z = 0; z < size.z; z++) {
-                    var chunk = world.GetChunkAt(x, z);
+                    var chunk = world.GetChunkAt(x, z, loadChunksIfNotPresent);
+                    if (chunk == null) {
+                        continue;
+                    }
+
                     for (var y = 0; y < size.y; y++) {
                         var index = IndexingUtility.IndexOf(x, y, z, size.x, size.y);
                         var localTile = tiles[index];
@@ -56,7 +62,9 @@ namespace Minecraft.Scripts.World.Structures {
                         tilePos.y += y;
                         tilePos.z += z;
                         var localPos = world.ToLocalChunkPosition(tilePos);
-                        byte chunkBlockX = (byte) localPos.x, chunkBlockY = (byte) localPos.y, chunkBlockZ = (byte) localPos.z;
+                        byte chunkBlockX = (byte) localPos.x,
+                            chunkBlockY = (byte) localPos.y,
+                            chunkBlockZ = (byte) localPos.z;
                         var presentTile = chunkData[chunkBlockX, chunkBlockY, chunkBlockZ];
                         if (localTile == presentTile) {
                             continue;
@@ -78,10 +86,15 @@ namespace Minecraft.Scripts.World.Structures {
                 }
             }
 
+            if (!updateChunks) {
+                return;
+            }
+
             foreach (var chunk in chunks) {
                 chunk.GenerateMesh(World.Instance);
             }
         }
+
         public static void PlaceOntoSilently(Chunk chunk, Vector3Int origin, Vector3Int size, Block[] tiles) {
             var chunks = new List<Chunk>();
             for (var x = 0; x < size.x; x++) {
@@ -99,7 +112,9 @@ namespace Minecraft.Scripts.World.Structures {
                         tilePos.y += y;
                         tilePos.z += z;
                         var localPos = origin;
-                        byte chunkBlockX = (byte) localPos.x, chunkBlockY = (byte) localPos.y, chunkBlockZ = (byte) localPos.z;
+                        byte chunkBlockX = (byte) localPos.x,
+                            chunkBlockY = (byte) localPos.y,
+                            chunkBlockZ = (byte) localPos.z;
                         var presentTile = chunkData[chunkBlockX, chunkBlockY, chunkBlockZ];
                         if (localTile == presentTile) {
                             continue;

@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Minecraft.Scripts.Utility;
 using Minecraft.Scripts.World.Blocks;
 using Minecraft.Scripts.World.Chunks;
+using Minecraft.Scripts.World.Jobs;
 using Minecraft.Scripts.World.Structures;
 using UnityEngine;
 using UnityUtilities;
-using Random = UnityEngine.Random;
+using Random = System.Random;
 
 namespace Minecraft.Scripts.World.Generation.Biomes {
     [Serializable]
     public sealed class OreCluster {
+        private static readonly Random random = new Random();
         public Block Block;
         public UInt8Range Amount;
         public UInt8Range MaxWidth, MaxHeight, MaxDepth;
@@ -42,12 +45,12 @@ namespace Minecraft.Scripts.World.Generation.Biomes {
                 }
             }
 
-            var dimension = possibleSizes.RandomElement();
+            var dimension = possibleSizes[random.Next(possibleSizes.Count)];
             var size = dimension.x * dimension.y * dimension.z;
             byte totalPlacedOres = 0;
             var blocks = new Block[size];
             while (totalPlacedOres != amount) {
-                var index = Random.Range(0, size);
+                var index = random.Next(size);
                 var b = blocks[index];
                 if (b != null) {
                     continue;
@@ -57,7 +60,7 @@ namespace Minecraft.Scripts.World.Generation.Biomes {
                 totalPlacedOres++;
             }
 
-            Structure.PlaceOnto(world, origin, dimension, blocks);
+            Structure.PlaceOnto(world, origin, dimension, blocks, false, false);
         }
     }
 
@@ -99,6 +102,7 @@ namespace Minecraft.Scripts.World.Generation.Biomes {
         public SubterraneanConfig Subterrain;
         public float PerlinScale = 5;
         public Block AirBlock;
+        private static readonly Random random = new Random();
 
         public override void Populate(World world, ref ChunkData data, Vector2Int chunkPosition) {
             var worldSize = world.ChunkSize;
@@ -130,12 +134,12 @@ namespace Minecraft.Scripts.World.Generation.Biomes {
             }
 
             foreach (var oreCluster in Subterrain.Clusters) {
-                while (oreCluster.Probability / 100 > Random.value) {
-                    var x = Random.Range(0, worldSize);
-                    var z = Random.Range(0, worldSize);
+                while (oreCluster.Probability / 100 > random.NextDouble()) {
+                    var x = random.Next(worldSize);
+                    var z = random.Next(worldSize);
                     var origin = new Vector3Int(
                         x,
-                        Random.Range(0, worldHeight - surfaceHeightBuffer[x, z]),
+                        random.Next(worldHeight - surfaceHeightBuffer[x, z]),
                         z
                     );
                     oreCluster.Place(world, origin);

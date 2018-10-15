@@ -59,7 +59,7 @@ namespace Minecraft.Scripts.World.Selection {
         public IEnumerable<WorldTile> SolidTiles {
             get {
                 foreach (var tile in Tiles) {
-                    if (tile.Material.Opaque) {
+                    if (tile.Material.Visible) {
                         yield return tile;
                     }
                 }

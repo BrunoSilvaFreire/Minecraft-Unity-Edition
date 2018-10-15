@@ -27,7 +27,7 @@ namespace Minecraft.Scripts.World.Blocks {
         public Material VisualMaterial;
         public Color SignatureColor = Color.magenta;
         public BlockMaterial Material => material;
-        public bool Opaque => composition == BlockCompositionType.Opaque;
+        public bool Visible => composition == BlockCompositionType.Opaque;
 
         public BlockCompositionType Composition => composition;
 
