@@ -1,7 +1,10 @@
 {
-    "name": "Minecraft-Items",
+    "name": "Minecraft-UI",
     "references": [
-        "Minecraft-Utility"
+        "Minecraft-Utility",
+        "Minecraft-Entities",
+        "Minecraft-Items",
+        "Minecraft-Game"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

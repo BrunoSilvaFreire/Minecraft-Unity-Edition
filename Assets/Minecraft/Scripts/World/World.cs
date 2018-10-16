@@ -27,6 +27,7 @@ namespace Minecraft.Scripts.World {
         public bool RegenerateOnStart;
         public bool GenerateSingleOnStart;
         public float PerlinScale;
+        public LayerMask WorldMask;
 
         public Populator Populator;
         public MeshGenerator MeshGenerator;
@@ -104,9 +105,21 @@ namespace Minecraft.Scripts.World {
             return GetChunk(chunkX, chunkY, loadIfNotPresent);
         }
 
+        public static int ToLayer(int bitmask) {
+            var result = bitmask > 0 ? 0 : 31;
+            while (bitmask > 1) {
+                bitmask = bitmask >> 1;
+                result++;
+            }
+
+            return result;
+        }
+
         private Chunk LoadChunk(Vector2Int position) {
             var obj = new GameObject($"Chunk ({position})");
             obj.transform.parent = transform;
+            obj.layer = ToLayer(WorldMask);
+            obj.isStatic = true;
             var chunk = obj.AddComponent<Chunk>();
             var data = new ChunkData(ChunkSize, ChunkHeight);
             chunk.Initialize(position, data);

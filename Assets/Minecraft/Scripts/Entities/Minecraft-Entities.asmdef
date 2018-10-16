@@ -3,10 +3,15 @@
     "references": [
         "Minecraft-Utility",
         "Minecraft-Input",
-        "Cinemachine"
+        "Cinemachine",
+        "Minecraft-Items"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],
     "excludePlatforms": [],
-    "allowUnsafeCode": false
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
 }

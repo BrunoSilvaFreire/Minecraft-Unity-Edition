@@ -1,19 +1,18 @@
 ﻿using System;
 using Cinemachine;
+using Minecraft.Scripts.Entities.Items;
+using Minecraft.Scripts.Entities.Items.Misc;
 using Minecraft.Scripts.Game.World;
-using Minecraft.Scripts.Items;
 using Minecraft.Scripts.World.Blocks;
 using Minecraft.Scripts.World.Chunks;
 using Minecraft.Scripts.World.Utilities;
 using UnityEngine;
-using UnityUtilities;
 
 namespace Minecraft.Scripts.Game {
     [Serializable]
     public class PlayerBreakingParameters {
         public float BreakDistance = 2;
         public float BreakRaycastEpsilon = .1F;
-        public LayerMask BreakableLayerMask;
         public ItemEntity ItemPrefab;
     }
 
@@ -96,7 +95,7 @@ namespace Minecraft.Scripts.Game {
             var cameraTransform = cam.transform;
             var dir = cameraTransform.forward;
             var result = Physics.Raycast(cameraTransform.position, dir, out hit, BreakingParameters.BreakDistance,
-                BreakingParameters.BreakableLayerMask);
+                Scripts.World.World.Instance.WorldMask);
             var blockPos = hit.point + -hit.normal * BreakingParameters.BreakRaycastEpsilon;
 
 
@@ -118,7 +117,8 @@ namespace Minecraft.Scripts.Game {
 
             var world = Scripts.World.World.Instance;
             hitBlock = world.GetBlock(blockPosition);
-            blockMaterial = hit.collider.GetComponent<MeshRenderer>().sharedMaterial;
+            var r = hit.collider.GetComponent<MeshRenderer>();
+            blockMaterial = r.sharedMaterial;
             return true;
         }
     }

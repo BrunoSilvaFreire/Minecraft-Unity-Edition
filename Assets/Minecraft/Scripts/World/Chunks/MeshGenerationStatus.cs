@@ -84,6 +84,8 @@ namespace Minecraft.Scripts.World.Chunks {
             foreach (var tuple in finishedMeshes) {
                 var block = tuple.Item2;
                 var chunkGO = new GameObject($"Chunk {chunk.ChunkPosition} - SubMesh ({block.Material})");
+                chunkGO.layer = chunk.gameObject.layer;
+                chunkGO.isStatic = true;
                 var t = chunkGO.transform;
                 t.parent = chunk.transform;
                 t.localPosition = Vector3.zero;

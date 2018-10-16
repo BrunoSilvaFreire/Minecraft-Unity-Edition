@@ -1,7 +1,7 @@
-﻿using Minecraft.Scripts.Entities;
+﻿using Minecraft.Scripts.Items;
 using UnityEngine;
 
-namespace Minecraft.Scripts.Items {
+namespace Minecraft.Scripts.Entities.Items {
     public partial class ItemEntity : Entity {
         public SpriteRenderer SpriteRenderer;
         public Rigidbody Rigidbody;
@@ -14,6 +14,7 @@ namespace Minecraft.Scripts.Items {
         private void Update() {
             UpdateVanity();
         }
+
 
         public void DropAsItem(Item item) {
             LoadData(item);

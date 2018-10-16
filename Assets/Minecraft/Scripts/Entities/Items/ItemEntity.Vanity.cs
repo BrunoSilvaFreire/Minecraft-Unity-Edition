@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Minecraft.Scripts.Items {
+namespace Minecraft.Scripts.Entities.Items {
     [Serializable]
     public class ItemFloatingParameters {
         public float FloatingDuration = 2;
