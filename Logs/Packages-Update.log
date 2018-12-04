@@ -8,3 +8,20 @@ The following packages were added:
   com.unity.collab-proxy@1.2.9
 The following packages were updated:
   com.unity.package-manager-ui from version 1.9.11 to 2.0.0-preview.7
+
+=== Wed Oct 31 19:09:39 2018
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.package-manager-ui from version 2.0.1 to 2.0.2
+
+=== Thu Nov 29 11:17:20 2018
+
+Packages were changed.
+Update Mode: updateDependencies
+
+The following packages were updated:
+  com.unity.package-manager-ui from version 2.0.2 to 2.0.3
+  com.unity.postprocessing from version 2.0.11-preview to 2.0.15-preview

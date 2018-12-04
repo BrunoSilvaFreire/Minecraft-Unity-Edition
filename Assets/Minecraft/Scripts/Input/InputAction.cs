@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Minecraft.Scripts.Input {
+namespace Minecraft.Scripts.Entities.Input {
     [Serializable]
     public sealed class InputAction {
         [SerializeField]

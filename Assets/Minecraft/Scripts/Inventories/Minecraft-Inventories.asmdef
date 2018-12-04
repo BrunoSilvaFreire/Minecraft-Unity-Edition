@@ -1,3 +1,15 @@
-﻿{
-	"name": "Minecraft-Inventories"
+{
+    "name": "Minecraft-Inventories",
+    "references": [
+        "Minecraft-Items",
+        "Minecraft-Utility"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
 }

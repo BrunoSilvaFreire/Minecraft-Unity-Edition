@@ -1,19 +1,43 @@
-﻿using Minecraft.Scripts.Entities.Movable;
+﻿using Minecraft.Scripts.Entities.Input;
+using Minecraft.Scripts.Entities.Movable;
 using Minecraft.Scripts.Game.World;
-using Minecraft.Scripts.Input;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityUtilities.Singletons;
 using MovableEntity = Minecraft.Scripts.Entities.Movable.MovableEntity;
 
 namespace Minecraft.Scripts.Game {
     public partial class Player : Singleton<Player> {
         public PlayerInputSource InputSource;
-        public MovableEntity CurrentEntity;
+
+        [SerializeField]
+        private MovableEntity currentEntity;
+
+        public MovableEntityEvent OnEntityChanged;
         public int ActiveEntityCameraPriority = 10, InactiveEntityCameraPriority = 0;
+
+        public MovableEntity CurrentEntity {
+            get {
+                return currentEntity;
+            }
+            set {
+                var old = currentEntity;
+                currentEntity = value;
+                OnEntityChanged.Invoke(old);
+            }
+        }
 
         private void Start() {
             StartMain();
             StartBreaking();
+            InvokeEvents();
+        }
+
+        private void InvokeEvents() {
+            if (currentEntity != null) {
+                Debug.Log("Initializing to " + currentEntity);
+                OnEntityChanged.Invoke(currentEntity);
+            }
         }
 
         private void StartMain() {

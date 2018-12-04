@@ -1,4 +1,4 @@
-﻿using Minecraft.Scripts.Input;
+﻿using Minecraft.Scripts.Entities.Input;
 
 namespace Minecraft.Scripts.Entities.Movable {
     public delegate void OwnershipRemovalCallback(OwnershipRemovalReason reason);
@@ -13,14 +13,14 @@ namespace Minecraft.Scripts.Entities.Movable {
     public partial class MovableEntity {
         private OwnershipRemovalCallback callback;
 
-        public InputSource InputSource {
+        public EntityInputSource InputSource {
             get;
             private set;
         }
 
         public bool HasInputSource => InputSource != null;
 
-        public void RequestOwnership(InputSource controller, OwnershipRemovalCallback removalCallback) {
+        public void RequestOwnership(EntityInputSource controller, OwnershipRemovalCallback removalCallback) {
             if (HasInputSource) {
                 RevokeOwnership(OwnershipRemovalReason.Override);
             }
@@ -40,6 +40,10 @@ namespace Minecraft.Scripts.Entities.Movable {
             var oldOwner = InputSource;
             RevokeOwnership(OwnershipRemovalReason.Revoked);
             return oldOwner;
+        }
+
+        private void UpdateInput() {
+            InputSource.ProcessExtras(this);
         }
     }
 }

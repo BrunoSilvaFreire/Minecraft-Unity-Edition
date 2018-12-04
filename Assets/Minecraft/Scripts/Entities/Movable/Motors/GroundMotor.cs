@@ -16,7 +16,7 @@ namespace Minecraft.Scripts.Entities.Movable.Motors {
             var velocity = s.Velocity;
             var source = entity.InputSource;
             var inputX = source.GetHorizontalMovement();
-            var inputZ = source.GetFowardMovement();
+            var inputZ = source.GetForwardMovement();
             var inputYaw = source.GetHorizontalRotation();
             var inputPitch = source.GetVerticalRotation();
             s.LookPitch -= inputPitch;

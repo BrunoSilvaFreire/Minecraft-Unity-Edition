@@ -13,7 +13,7 @@ namespace Minecraft.Scripts.Game {
     public class PlayerBreakingParameters {
         public float BreakDistance = 2;
         public float BreakRaycastEpsilon = .1F;
-        public ItemEntity ItemPrefab;
+        public ItemWisp ItemPrefab;
     }
 
     public partial class Player {
@@ -31,7 +31,6 @@ namespace Minecraft.Scripts.Game {
             var world = Scripts.World.World.Instance;
             var db = world.BlockDatabase;
             var block = world.GetBlock(lastBreakPos);
-            Debug.Log("sSetting blocok @ " + lastBreakPos + " to air");
             world.SetBlock(lastBreakPos, db.GetBlock(BlockMaterial.Air));
             foreach (var drop in block.Drops) {
                 drop.Drop(BreakingParameters.ItemPrefab, lastBreakPos.AddHalf());

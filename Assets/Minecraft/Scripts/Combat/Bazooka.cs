@@ -9,7 +9,7 @@ namespace Minecraft.Scripts.Combat {
         public Entity Entity;
 
         private void Update() {
-            if (!UnityEngine.Input.GetKeyDown(KeyCode)) {
+            if (!UnityEngine.Input.GetKey(KeyCode)) {
                 return;
             }
 

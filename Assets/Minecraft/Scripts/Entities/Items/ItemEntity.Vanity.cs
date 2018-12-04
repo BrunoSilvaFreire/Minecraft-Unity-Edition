@@ -8,7 +8,7 @@ namespace Minecraft.Scripts.Entities.Items {
         public AnimationCurve HeightCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
     }
 
-    public partial class ItemEntity {
+    public partial class ItemWisp {
         public float RotationSpeed = 5;
         public ItemFloatingParameters FloatingParameters;
         public GameObject Body;

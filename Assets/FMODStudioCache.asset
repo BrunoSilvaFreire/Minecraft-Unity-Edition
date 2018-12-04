@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EditorBanks:
   - {fileID: 114015097204864240}
-  - {fileID: 114241638267700248}
-  - {fileID: 114653061372438184}
+  - {fileID: 114207044085974756}
+  - {fileID: 114767208341460504}
   EditorEvents:
   - {fileID: 114859623027425168}
   - {fileID: 114232930441817676}
@@ -23,9 +23,9 @@ MonoBehaviour:
   - {fileID: 114770063617412484}
   - {fileID: 114838598108582082}
   - {fileID: 114720470269089506}
-  MasterBankRef: {fileID: 114653061372438184}
+  MasterBankRef: {fileID: 114767208341460504}
   StringsBankRef: {fileID: 114015097204864240}
-  stringsBankWriteTime: 636739876332377685
+  stringsBankWriteTime: 636702216309343277
   cacheVersion: 2
 --- !u!114 &114015097204864240
 MonoBehaviour:
@@ -40,7 +40,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Path: FMOD\Build\Desktop\Master Bank.strings.bank
-  lastModified: 636739876332377685
+  lastModified: 636702216309343277
   LoadResult: 0
   FileSizes:
   - Name: Desktop
@@ -61,7 +61,7 @@ MonoBehaviour:
   Path: event:/SFX/World/Blocks/Stone/Stone_Dig
   guid: dbbb5fb35c29494fbcb83c3ab751de3e
   Banks:
-  - {fileID: 114241638267700248}
+  - {fileID: 114207044085974756}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -88,6 +88,25 @@ MonoBehaviour:
   - Name: Desktop
     Value: 103936
   Exists: 1
+--- !u!114 &114207044085974756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: C:\Work\Unity\Minecraft\FMOD\Build\Desktop\Blocks.bank
+  lastModified: 636702216309898345
+  LoadResult: 0
+  FileSizes:
+  - Name: Desktop
+    Value: 103936
+  Exists: 1
 --- !u!114 &114232930441817676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,7 +122,7 @@ MonoBehaviour:
   Path: event:/SFX/World/Blocks/Stone/Stone_Step
   guid: a1583f59082d8d458e6ac58e8446a030
   Banks:
-  - {fileID: 114241638267700248}
+  - {fileID: 114207044085974756}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -183,7 +202,7 @@ MonoBehaviour:
   Path: event:/SFX/World/Blocks/Grass/Grass_Dig
   guid: 767acd9886a2a145b9454fd67da89d17
   Banks:
-  - {fileID: 114241638267700248}
+  - {fileID: 114207044085974756}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -191,6 +210,25 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 500
+--- !u!114 &114767208341460504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: C:\Work\Unity\Minecraft\FMOD\Build\Desktop\Master Bank.bank
+  lastModified: 636702216309228400
+  LoadResult: 0
+  FileSizes:
+  - Name: Desktop
+    Value: 12474
+  Exists: 1
 --- !u!114 &114770063617412484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,7 +244,7 @@ MonoBehaviour:
   Path: event:/SFX/World/Blocks/Grass/Grass_Hit
   guid: 0fd0bb5fb2523f41920503ca7308e2f0
   Banks:
-  - {fileID: 114241638267700248}
+  - {fileID: 114207044085974756}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -229,7 +267,7 @@ MonoBehaviour:
   Path: event:/SFX/World/Blocks/Grass/Grass_Step
   guid: 0c0649664f61a34d9bb01161a4066cb7
   Banks:
-  - {fileID: 114241638267700248}
+  - {fileID: 114207044085974756}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -252,7 +290,7 @@ MonoBehaviour:
   Path: event:/SFX/World/Blocks/Stone/Stone_Hit
   guid: 4215db2f69a4974296a2dc338b0ec8be
   Banks:
-  - {fileID: 114241638267700248}
+  - {fileID: 114207044085974756}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1

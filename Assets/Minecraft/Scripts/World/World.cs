@@ -26,7 +26,6 @@ namespace Minecraft.Scripts.World {
         public int Seed;
         public bool RegenerateOnStart;
         public bool GenerateSingleOnStart;
-        public float PerlinScale;
         public LayerMask WorldMask;
 
         public Populator Populator;

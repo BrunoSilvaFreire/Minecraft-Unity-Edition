@@ -11,6 +11,8 @@ namespace Minecraft.Scripts.Game {
             }
 
             var world = Scripts.World.World.Instance;
+            // TODO: Disgusting, I Know
+            world.MeshGenerator.PriorityPosition = currentEntity.transform.position;
             CheckUnloadedChunks(world);
             CheckLoadedChunks(world);
         }

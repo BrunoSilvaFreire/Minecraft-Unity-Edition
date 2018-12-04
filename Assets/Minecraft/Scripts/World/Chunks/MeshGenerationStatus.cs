@@ -32,7 +32,7 @@ namespace Minecraft.Scripts.World.Chunks {
         public GenerationState State {
             get;
             private set;
-        }
+        } 
 
         private Chunk chunk;
         public bool IsFinishedOrGenerating => State != GenerationState.Idle;

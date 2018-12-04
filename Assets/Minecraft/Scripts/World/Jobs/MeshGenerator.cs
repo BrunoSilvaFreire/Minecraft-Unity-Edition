@@ -7,12 +7,16 @@ using Minecraft.Scripts.World.Chunks;
 using Minecraft.Scripts.World.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityUtilities;
 
 namespace Minecraft.Scripts.World.Jobs {
     [Serializable]
     public class MeshGenerator : JobSystem<MeshWorker, MeshJob> {
+        // TODO: Disgusting, I Know, find a way to fix this
+        public Vector3 PriorityPosition;
+
         protected override MeshWorker InstantiateWorker(byte b) {
-            return new MeshWorker(b);
+            return new MeshWorker(b, this);
         }
 
         public void Initialize() {
@@ -24,7 +28,10 @@ namespace Minecraft.Scripts.World.Jobs {
         private Chunk chunk;
         private UnityAction<List<Tuple<MeshBuilder, Block>>> onCalculated;
 
-        public MeshJob(UnityAction startedCallback, UnityAction finishedCallback, Chunk chunk,
+        public MeshJob(
+            UnityAction startedCallback,
+            UnityAction finishedCallback,
+            Chunk chunk,
             UnityAction<List<Tuple<MeshBuilder, Block>>> onCalculated) : base(startedCallback, finishedCallback) {
             this.chunk = chunk;
             this.onCalculated = onCalculated;
@@ -38,7 +45,38 @@ namespace Minecraft.Scripts.World.Jobs {
     }
 
     public sealed class MeshWorker : AbstractWorker<MeshJob> {
-        public MeshWorker(byte workerId) : base(workerId) { }
+        private readonly MeshGenerator owner;
+
+        public MeshWorker(byte workerId, MeshGenerator meshGenerator) : base(workerId) {
+            owner = meshGenerator;
+        }
+
+        protected override MeshJob Dequeue() {
+            var pos = owner.PriorityPosition;
+            var size = World.Instance.ChunkSize;
+            var offset = new Vector2(size + 0.5F, size + 0.5F);
+            // Using enumerator to ensure safe async modification
+            var e = jobQueue.GetEnumerator();
+            MeshJob min = null;
+            var lastD = float.MaxValue;
+            while (e.MoveNext()) {
+                var other = e.Current;
+                if (other == null) {
+                    continue;
+                }
+
+                var dist = Vector2.Distance(pos, other.Chunk.ChunkPosition + offset);
+                if (min != null && dist > lastD) {
+                    continue;
+                }
+
+                min = other;
+                lastD = dist;
+            }
+
+            e.Dispose();
+            return min;
+        }
 
         protected override void Execute(MeshJob job) {
             var data = job.Chunk.ChunkData;
@@ -55,7 +93,10 @@ namespace Minecraft.Scripts.World.Jobs {
             job.OnCalculated(meshes);
         }
 
-        private static MeshBuilder GenerateSubMesh(Block targetMaterial, ChunkData chunkData, Queue<Block> pending,
+        private static MeshBuilder GenerateSubMesh(
+            Block targetMaterial,
+            ChunkData chunkData,
+            Queue<Block> pending,
             ICollection<Block> completed) {
             var chunkSize = chunkData.ChunkSize;
             var chunkHeight = chunkData.ChunkHeight;
@@ -72,6 +113,7 @@ namespace Minecraft.Scripts.World.Jobs {
                             if (!completed.Contains(currentBlock) && !pending.Contains(currentBlock)) {
                                 pending.Enqueue(currentBlock);
                             }
+
                             continue;
                         }
 

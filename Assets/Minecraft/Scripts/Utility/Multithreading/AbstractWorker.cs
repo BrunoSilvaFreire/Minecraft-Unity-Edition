@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
+using UnityEngine;
+using Random = System.Random;
 using UnityEngine.Events;
 using UnityUtilities;
 
@@ -61,19 +64,25 @@ namespace Minecraft.Scripts.Utility.Multithreading {
 
     public abstract class AbstractWorker<T> where T : Job {
         private readonly AutoResetEvent handle = new AutoResetEvent(false);
-        private readonly Queue<T> jobQueue = new Queue<T>();
+        protected readonly List<T> jobQueue = new List<T>();
         private readonly byte id;
 
         public AbstractWorker(byte workerId) {
             id = workerId;
-            var thread = new Thread(Process) {
+            new Thread(Process) {
                 Name = ToString()
-            };
-            thread.Start();
+            }.Start();
+        }
+
+        private static readonly Random internalRandom = new Random();
+
+        protected virtual T Dequeue() {
+            var index = internalRandom.Next(0, jobQueue.Count);
+            return jobQueue[index];
         }
 
         public void Enqueue(T job) {
-            jobQueue.Enqueue(job);
+            jobQueue.Add(job);
             handle.Set();
         }
 
@@ -83,7 +92,8 @@ namespace Minecraft.Scripts.Utility.Multithreading {
             while (!shouldStop) {
                 handle.WaitOne();
                 while (!jobQueue.IsEmpty()) {
-                    var job = jobQueue.Dequeue();
+                    var job = Dequeue();
+                    jobQueue.Remove(job);
                     job.StartedCallback();
                     Execute(job);
                     job.FinishedCallback();

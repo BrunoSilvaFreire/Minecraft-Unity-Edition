@@ -7,7 +7,9 @@
         "Cinemachine",
         "Minecraft-World",
         "Minecraft-FX",
-        "Minecraft-Items"
+        "Minecraft-Items",
+        "Minecraft-UI",
+        "Minecraft-Inventories"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Minecraft.Scripts.World.Editor {
     public abstract class Config<T> {
-        private protected string name;
+        protected string name;
 
         public Config(string name) {
             this.name = name;
@@ -141,7 +141,7 @@ namespace Minecraft.Scripts.World.Editor {
                         }
 
                         if (Configs.ShowLabels) {
-                            Handles.Label(blockPosition,  block == null ? "null block!" : block.ToString());
+                            Handles.Label(blockPosition, block == null ? "null block!" : block.ToString());
                         }
                     }
                 }

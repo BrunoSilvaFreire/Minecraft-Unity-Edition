@@ -7,5 +7,6 @@ namespace Minecraft.Scripts.Items {
         public Color SignatureColor = Color.cyan;
         public ItemCategory Category;
         public ItemRarity Rarity;
+        public byte StackSize;
     }
 }

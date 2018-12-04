@@ -4,7 +4,7 @@
         "Minecraft-Utility",
         "Minecraft-Entities",
         "Minecraft-Items",
-        "Minecraft-Game"
+        "DOTween-Extras"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

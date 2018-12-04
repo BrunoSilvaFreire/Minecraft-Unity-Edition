@@ -1,18 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Minecraft.Scripts.Items;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class Inventory : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+namespace Minecraft.Scripts.Inventories {
+    public abstract class Inventory : MonoBehaviour {
+        public UnityEvent OnModified;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public abstract ItemStack this[uint index] {
+            get;
+            set;
+        }
+
+        public abstract bool TryAddStack(ItemStack stack, out byte left);
     }
 }

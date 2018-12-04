@@ -4,7 +4,8 @@
         "Minecraft-Utility",
         "Minecraft-Input",
         "Cinemachine",
-        "Minecraft-Items"
+        "Minecraft-Items",
+        "Minecraft-Inventories"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],
