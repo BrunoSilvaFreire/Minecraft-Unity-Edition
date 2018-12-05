@@ -32,3 +32,4 @@ ExportedObj/
 sysinfo.txt
 *.apk
 *.unitypackage
+*.DotSettings
