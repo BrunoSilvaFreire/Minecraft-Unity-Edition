@@ -10,6 +10,7 @@ namespace Minecraft.Scripts.Master.UI.Inventories {
         }
 
         public Image Image;
+        public Text AmountLabel;
 
         public void Import(ItemStack item) {
             if (item == null) {
@@ -17,6 +18,13 @@ namespace Minecraft.Scripts.Master.UI.Inventories {
             } else {
                 Image.enabled = true;
                 Image.sprite = item.Item.Sprite;
+            }
+
+            if (item == null || item.Amount <= 1) {
+                AmountLabel.enabled = false;
+            } else {
+                AmountLabel.enabled = true;
+                AmountLabel.text = item.Amount.ToString();
             }
 
             CurrentItem = item;
