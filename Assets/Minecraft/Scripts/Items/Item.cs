@@ -8,5 +8,6 @@ namespace Minecraft.Scripts.Items {
         public ItemCategory Category;
         public ItemRarity Rarity;
         public byte StackSize;
+        public string Alias;
     }
 }

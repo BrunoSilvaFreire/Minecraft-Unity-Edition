@@ -16,6 +16,7 @@ MonoBehaviour:
   - {fileID: 114015097204864240}
   - {fileID: 114207044085974756}
   - {fileID: 114767208341460504}
+  - {fileID: 114121138751302696}
   EditorEvents:
   - {fileID: 114859623027425168}
   - {fileID: 114232930441817676}
@@ -23,9 +24,10 @@ MonoBehaviour:
   - {fileID: 114770063617412484}
   - {fileID: 114838598108582082}
   - {fileID: 114720470269089506}
+  - {fileID: 114858618768089096}
   MasterBankRef: {fileID: 114767208341460504}
   StringsBankRef: {fileID: 114015097204864240}
-  stringsBankWriteTime: 636702216309343277
+  stringsBankWriteTime: 636864356906778274
   cacheVersion: 2
 --- !u!114 &114015097204864240
 MonoBehaviour:
@@ -40,11 +42,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Path: FMOD\Build\Desktop\Master Bank.strings.bank
-  lastModified: 636702216309343277
+  lastModified: 636864356906778274
   LoadResult: 0
   FileSizes:
   - Name: Desktop
-    Value: 1012
+    Value: 1118
   Exists: 1
 --- !u!114 &114019181627388914
 MonoBehaviour:
@@ -69,6 +71,25 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 500
+--- !u!114 &114121138751302696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: C:\Work\Unity\Minecraft\FMOD\Build\Desktop\Ambience.bank
+  lastModified: 636864357108160285
+  LoadResult: 0
+  FileSizes:
+  - Name: Desktop
+    Value: 6267904
+  Exists: 1
 --- !u!114 &114185444500751986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,7 +122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Path: C:\Work\Unity\Minecraft\FMOD\Build\Desktop\Blocks.bank
-  lastModified: 636702216309898345
+  lastModified: 636864356908998202
   LoadResult: 0
   FileSizes:
   - Name: Desktop
@@ -223,7 +244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Path: C:\Work\Unity\Minecraft\FMOD\Build\Desktop\Master Bank.bank
-  lastModified: 636702216309228400
+  lastModified: 636864356906689053
   LoadResult: 0
   FileSizes:
   - Name: Desktop
@@ -275,6 +296,29 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 609
+--- !u!114 &114858618768089096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/World/Ambience/Forest_Ambience
+  guid: 01ef88b18204f94083a63b6991d296e7
+  Banks:
+  - {fileID: 114121138751302696}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 488157
 --- !u!114 &114859623027425168
 MonoBehaviour:
   m_ObjectHideFlags: 0

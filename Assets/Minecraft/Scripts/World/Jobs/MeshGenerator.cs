@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Minecraft.Scripts.Utility;
 using Minecraft.Scripts.Utility.Multithreading;
@@ -56,11 +57,10 @@ namespace Minecraft.Scripts.World.Jobs {
             var size = World.Instance.ChunkSize;
             var offset = new Vector2(size + 0.5F, size + 0.5F);
             // Using enumerator to ensure safe async modification
-            var e = jobQueue.GetEnumerator();
+            var e = jobQueue.ToArray();
             MeshJob min = null;
             var lastD = float.MaxValue;
-            while (e.MoveNext()) {
-                var other = e.Current;
+            foreach (var other in e) {
                 if (other == null) {
                     continue;
                 }
@@ -74,7 +74,6 @@ namespace Minecraft.Scripts.World.Jobs {
                 lastD = dist;
             }
 
-            e.Dispose();
             return min;
         }
 
