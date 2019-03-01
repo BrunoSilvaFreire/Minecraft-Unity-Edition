@@ -3,7 +3,8 @@
     "references": [
         "Minecraft-Utility",
         "Minecraft-Items",
-        "Unity.Collections"
+        "Unity.Collections",
+        "FMOD"
     ],
     "optionalUnityReferences": [],
     "includePlatforms": [],

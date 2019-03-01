@@ -1,4 +1,5 @@
 using Minecraft.Scripts.Utility;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
 using UnityUtilities;
@@ -12,8 +13,9 @@ namespace Minecraft.Scripts.Editor {
             EditorGUI.MinMaxSlider(position.GetLine(0), label, ref min, ref max, GetMinLimit(), GetMaxLimit());
             SetMin(startProp, min);
             SetMax(endProp, max);
-            EditorGUI.PropertyField(position.GetLine(1), startProp);
-            EditorGUI.PropertyField(position.GetLine(2), endProp);
+            var range2 = position.AddXMin(16);
+            EditorGUI.PropertyField(range2.GetLine(1), startProp);
+            EditorGUI.PropertyField(range2.GetLine(2), endProp);
         }
 
         protected abstract void SetMax(SerializedProperty endProp, float max);

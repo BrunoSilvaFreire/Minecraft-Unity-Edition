@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Minecraft.Scripts.Utility;
 using Minecraft.Scripts.Utility.Multithreading;
 using Minecraft.Scripts.World.Blocks;
@@ -9,6 +10,7 @@ using Minecraft.Scripts.World.Utilities;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityUtilities;
+using Object = UnityEngine.Object;
 
 namespace Minecraft.Scripts.World.Jobs {
     [Serializable]
@@ -25,23 +27,64 @@ namespace Minecraft.Scripts.World.Jobs {
         }
     }
 
-    public class MeshJob : Job {
+    [Serializable]
+    public sealed class ChunkObject {
+        public GameObject Prefab;
+        public Vector3Int ChunkBlock;
+
+        public ChunkObject(GameObject prefab, Vector3Int chunkBlock) {
+            Prefab = prefab;
+            ChunkBlock = chunkBlock;
+        }
+
+        public GameObject Install(Chunk chunk) {
+            var obj = Object.Instantiate(Prefab);
+            obj.transform.parent = chunk.transform;
+            obj.transform.localPosition = ChunkBlock + new Vector3(0.5F, 0.5F, 0.5F);
+            return obj;
+        }
+
+        public override string ToString() {
+            return $"{nameof(Prefab)}: {Prefab}, {nameof(ChunkBlock)}: {ChunkBlock}";
+        }
+    }
+
+    public class MeshJob : Job<MeshJob> {
         private Chunk chunk;
-        private UnityAction<List<Tuple<MeshBuilder, Block>>> onCalculated;
+
+        public List<Tuple<MeshBuilder, Block>> GeneratedMeshes {
+            get;
+            private set;
+        }
+
+        public List<ChunkObject> SpecialObjects {
+            get;
+            private set;
+        }
 
         public MeshJob(
-            UnityAction startedCallback,
-            UnityAction finishedCallback,
             Chunk chunk,
-            UnityAction<List<Tuple<MeshBuilder, Block>>> onCalculated) : base(startedCallback, finishedCallback) {
+            UnityAction<MeshJob, JobState> callback = null
+        ) : base(callback) {
             this.chunk = chunk;
-            this.onCalculated = onCalculated;
         }
 
         public Chunk Chunk => chunk;
 
-        public void OnCalculated(List<Tuple<MeshBuilder, Block>> meshes) {
-            onCalculated(meshes);
+        public void Complete(
+            List<Tuple<MeshBuilder, Block>> meshes,
+            List<ChunkObject> specialObjects
+        ) {
+            if (GeneratedMeshes != null) {
+                throw new Exception("Already completed!");
+            }
+
+            GeneratedMeshes = meshes;
+            SpecialObjects = specialObjects;
+        }
+
+        public override string ToString() {
+            return $"{nameof(Chunk)}: {Chunk.ChunkPosition}";
         }
     }
 
@@ -56,8 +99,8 @@ namespace Minecraft.Scripts.World.Jobs {
             var pos = owner.PriorityPosition;
             var size = World.Instance.ChunkSize;
             var offset = new Vector2(size + 0.5F, size + 0.5F);
-            // Using enumerator to ensure safe async modification
-            var e = jobQueue.ToArray();
+            // Using copy to ensure safe async modification
+            var e = new List<MeshJob>(jobQueue);
             MeshJob min = null;
             var lastD = float.MaxValue;
             foreach (var other in e) {
@@ -83,13 +126,37 @@ namespace Minecraft.Scripts.World.Jobs {
             pending.Enqueue(data[0]);
             var completed = new HashSet<Block>();
             var meshes = new List<Tuple<MeshBuilder, Block>>();
+            var objs = new List<ChunkObject>();
             do {
                 var current = pending.Dequeue();
-                meshes.Add(new Tuple<MeshBuilder, Block>(GenerateSubMesh(current, data, pending, completed), current));
+                if (current.HasVisualOverride) {
+                    objs.AddRange(AccumulateChunkObjects(current, data));
+                    completed.Add(current);
+                } else {
+                    meshes.Add(new Tuple<MeshBuilder, Block>(GenerateSubMesh(current, data, pending, completed), current));
+                }
+
                 completed.Add(current);
             } while (pending.Count > 0);
 
-            job.OnCalculated(meshes);
+            job.Complete(meshes, objs);
+        }
+
+        private static IEnumerable<ChunkObject> AccumulateChunkObjects(Block block, ChunkData chunkData) {
+            var chunkSize = chunkData.ChunkSize;
+            var chunkHeight = chunkData.ChunkHeight;
+            for (byte x = 0; x < chunkSize; x++) {
+                for (byte y = 0; y < chunkHeight; y++) {
+                    for (byte z = 0; z < chunkSize; z++) {
+                        var currentBlock = chunkData[x, y, z];
+                        if (currentBlock != block) {
+                            continue;
+                        }
+
+                        yield return new ChunkObject(block.VisualOverride, new Vector3Int(x, y, z));
+                    }
+                }
+            }
         }
 
         private static MeshBuilder GenerateSubMesh(
@@ -104,10 +171,6 @@ namespace Minecraft.Scripts.World.Jobs {
                 for (byte y = 0; y < chunkHeight; y++) {
                     for (byte z = 0; z < chunkSize; z++) {
                         var currentBlock = chunkData[x, y, z];
-                        if (!currentBlock.Visible) {
-                            continue;
-                        }
-
                         if (currentBlock != targetMaterial) {
                             if (!completed.Contains(currentBlock) && !pending.Contains(currentBlock)) {
                                 pending.Enqueue(currentBlock);
@@ -115,6 +178,11 @@ namespace Minecraft.Scripts.World.Jobs {
 
                             continue;
                         }
+
+                        if (!currentBlock.Visible) {
+                            continue;
+                        }
+
 
                         foreach (var face in BlockFaces.Faces) {
                             var dir = face.ToDirection();

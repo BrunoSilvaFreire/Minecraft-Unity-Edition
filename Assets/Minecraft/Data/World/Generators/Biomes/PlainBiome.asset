@@ -14,15 +14,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Crust:
     MinimumHeight: 8
+    CrustOverlay:
+    - Block: {fileID: 114481187253780878, guid: a648556678366cb4bac036594db90f5a,
+        type: 2}
+      Chance: 0.1
     CrustElements:
     - Height: 1
-      Block: {fileID: 114071646838245674, guid: a648556678366cb4bac036594db90f5a, type: 2}
+      Block: {fileID: 114071646838245674, guid: a648556678366cb4bac036594db90f5a,
+        type: 2}
     - Height: 2
-      Block: {fileID: 114235635094152608, guid: a648556678366cb4bac036594db90f5a, type: 2}
+      Block: {fileID: 114235635094152608, guid: a648556678366cb4bac036594db90f5a,
+        type: 2}
   Subterrain:
-    DefaultBlock: {fileID: 114104204515819304, guid: a648556678366cb4bac036594db90f5a, type: 2}
+    DefaultBlock: {fileID: 114104204515819304, guid: a648556678366cb4bac036594db90f5a,
+      type: 2}
     Clusters:
-    - Block: {fileID: 114895956488309554, guid: a648556678366cb4bac036594db90f5a, type: 2}
+    - Block: {fileID: 114895956488309554, guid: a648556678366cb4bac036594db90f5a,
+        type: 2}
       Amount:
         Start: 1
         End: 4
@@ -36,7 +44,8 @@ MonoBehaviour:
         Start: 4
         End: 6
       Probability: 50
-    - Block: {fileID: 114198773441606638, guid: a648556678366cb4bac036594db90f5a, type: 2}
+    - Block: {fileID: 114198773441606638, guid: a648556678366cb4bac036594db90f5a,
+        type: 2}
       Amount:
         Start: 1
         End: 4

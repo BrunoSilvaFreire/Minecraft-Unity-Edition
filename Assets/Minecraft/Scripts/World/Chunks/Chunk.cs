@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Minecraft.Scripts.Utility;
+using Minecraft.Scripts.Utility.Multithreading;
 using Minecraft.Scripts.World.Blocks;
+using Minecraft.Scripts.World.Jobs;
 using UnityEngine;
 using Minecraft.Scripts.World.Utilities;
 #if UNITY_EDITOR
@@ -27,7 +29,7 @@ namespace Minecraft.Scripts.World.Chunks {
         }
     }
 
-    public class Chunk : MonoBehaviour {
+    public partial class Chunk : MonoBehaviour {
         public bool ChunkInitialized {
             get;
             private set;
@@ -67,62 +69,6 @@ namespace Minecraft.Scripts.World.Chunks {
             ChunkInitialized = true;
             chunkPosition = position;
             chunkData = data;
-        }
-
-        private CompositionGenerationStatus compositionGenerationStatus;
-        private MeshGenerationStatus meshGenerationStatus;
-
-        public CompositionGenerationStatus CompositionGenerationStatus => compositionGenerationStatus;
-
-        public MeshGenerationStatus MeshGenerationStatus => meshGenerationStatus;
-
-        public bool IsMeshGenerated {
-            get {
-                if (compositionGenerationStatus.State != GenerationState.Finished) {
-                    return false;
-                }
-
-                return meshGenerationStatus != null && meshGenerationStatus.IsFinishedOrGenerating;
-            }
-        }
-
-        public void GenerateComposition(World world) {
-            if (compositionGenerationStatus != null && compositionGenerationStatus.State != GenerationState.Idle) {
-                return;
-            }
-
-            compositionGenerationStatus = new CompositionGenerationStatus();
-            compositionGenerationStatus.UpdateStatus(GenerationState.Waiting);
-
-            var job = new PopulateJob(OnBeginCompositionGeneration, OnFinishedCompositionGeneration, this);
-            world.Populator.Enqueue(job);
-        }
-
-        private void OnBeginCompositionGeneration() {
-            CompositionGenerationStatus.UpdateStatus(GenerationState.Generating);
-        }
-
-        private void OnFinishedCompositionGeneration() {
-            CompositionGenerationStatus.UpdateStatus(GenerationState.Finished);
-        }
-
-        public void GenerateMesh(World world, bool cancelCurrentGeneration = true) {
-            if (compositionGenerationStatus.State != GenerationState.Finished) {
-                GenerateComposition(world);
-            }
-
-            var currentState = meshGenerationStatus;
-            if (currentState != null && !currentState.IsFinished) {
-                if (cancelCurrentGeneration) {
-                    currentState.Cancel();
-                } else {
-                    return;
-                }
-            }
-
-
-            meshGenerationStatus = new MeshGenerationStatus(this);
-            meshGenerationStatus.Generate(world);
         }
 
         private bool shouldClearMeshes;

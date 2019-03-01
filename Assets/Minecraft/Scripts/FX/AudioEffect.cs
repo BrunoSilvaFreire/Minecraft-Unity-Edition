@@ -15,7 +15,7 @@ namespace Minecraft.Scripts.FX {
             try {
                 instance = RuntimeManager.CreateInstance(eventName);
             } catch (Exception e) {
-                Debug.LogWarning($"Exception occoured when playing FMOD event \'{eventName}\': {e.Message}");
+                Debug.LogWarning($"Exception occured when playing FMOD event \'{eventName}\': {e.Message}");
                 return;
             }
 

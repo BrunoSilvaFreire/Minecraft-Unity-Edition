@@ -3,6 +3,7 @@ using Cinemachine;
 using Minecraft.Scripts.Entities.Items;
 using Minecraft.Scripts.Entities.Items.Misc;
 using Minecraft.Scripts.Game.World;
+using Minecraft.Scripts.Utility.Multithreading;
 using Minecraft.Scripts.World.Blocks;
 using Minecraft.Scripts.World.Chunks;
 using Minecraft.Scripts.World.Utilities;
@@ -108,7 +109,7 @@ namespace Minecraft.Scripts.Game {
             }
 
             var chunk = result ? hit.collider.GetComponentInParent<Chunk>() : null;
-            if (!result || chunk != null && !chunk.MeshGenerationStatus.IsFinished) {
+            if (!result || chunk != null && chunk.MeshGenerationStatus != JobState.Finished) {
                 hitBlock = null;
                 blockMaterial = null;
                 return false;

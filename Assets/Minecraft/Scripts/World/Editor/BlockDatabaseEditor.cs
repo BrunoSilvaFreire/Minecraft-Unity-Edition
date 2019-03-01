@@ -13,8 +13,27 @@ namespace Minecraft.Scripts.World.Editor {
         }
 
         public override void OnInspectorGUI() {
-            if (GUILayout.Button("Create Block")) {
-                UnityEditor.Selection.activeObject = db.AddToAssetFile<Block>();
+            using (new EditorGUILayout.HorizontalScope()) {
+                var found = EditorGUILayout.ObjectField("Install block", null, typeof(Block), false);
+                if (found != null) {
+                    Block instance;
+                    var mainAsset = AssetDatabase.LoadMainAssetAtPath(AssetDatabase.GetAssetPath(found));
+                    if (mainAsset != db) {
+                        instance = (Block) Instantiate(found);
+                        AssetDatabase.AddObjectToAsset(instance, db);
+                        DestroyImmediate(found, true);
+                    } else {
+                        instance = (Block) found;
+                    }
+
+                    db.Blocks.Add(instance);
+                    EditorUtility.SetDirty(db);
+                    AssetDatabase.SaveAssets();
+                }
+
+                if (GUILayout.Button("Create Block")) {
+                    UnityEditor.Selection.activeObject = db.AddToAssetFile<Block>();
+                }
             }
 
             DrawDefaultInspector();

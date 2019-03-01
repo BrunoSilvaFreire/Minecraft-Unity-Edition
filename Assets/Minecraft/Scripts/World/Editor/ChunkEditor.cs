@@ -93,10 +93,9 @@ namespace Minecraft.Scripts.World.Editor {
                 return;
             }
 
-            using (var scope = new EditorGUI.DisabledScope(true)) {
-                EditorGUILayout.EnumPopup("Composition State", chunk.CompositionGenerationStatus.State);
-                EditorGUILayout.EnumPopup("Mesh State", chunk.MeshGenerationStatus.State);
-                EditorGUILayout.Toggle("Mesh Generated", chunk.IsMeshGenerated);
+            using (new EditorGUI.DisabledScope(true)) {
+                EditorGUILayout.EnumPopup("Composition State", chunk.CompositionGenerationStatus);
+                EditorGUILayout.EnumPopup("Mesh State", chunk.MeshGenerationStatus);
             }
         }
 

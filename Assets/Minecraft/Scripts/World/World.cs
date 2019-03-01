@@ -21,7 +21,6 @@ namespace Minecraft.Scripts.World {
         public byte ChunkHeight = byte.MaxValue;
         public WorldGenerator Generator;
         public BlockDatabase BlockDatabase;
-        public Material ChunkMaterial;
         public bool RandomizeSeed;
         public int Seed;
         public bool RegenerateOnStart;

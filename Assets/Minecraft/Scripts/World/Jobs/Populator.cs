@@ -1,14 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Threading;
 using Minecraft.Scripts.Utility.Multithreading;
 using Minecraft.Scripts.World.Chunks;
-using Minecraft.Scripts.World.Jobs;
-using UnityEngine;
 using UnityEngine.Events;
-using UnityUtilities;
 
-namespace Minecraft.Scripts.World {
+namespace Minecraft.Scripts.World.Jobs {
     [Serializable]
     public sealed class Populator : JobSystem<PopulatorWorker, PopulateJob> {
         private World world;
@@ -23,15 +18,21 @@ namespace Minecraft.Scripts.World {
         }
     }
 
-    public sealed class PopulateJob : Job {
-        private Chunk chunk;
-
-        public PopulateJob(UnityAction startedCallback, UnityAction finishedCallback, Chunk chunk) : base(
-            startedCallback, finishedCallback) {
-            this.chunk = chunk;
+    public sealed class PopulateJob : Job<PopulateJob> {
+        public PopulateJob(
+            Chunk chunk,
+            UnityAction<PopulateJob, JobState> callback = null
+        ) : base(callback) {
+            Chunk = chunk;
         }
 
-        public Chunk Chunk => chunk;
+        public Chunk Chunk {
+            get;
+        }
+
+        public override string ToString() {
+            return $"{nameof(Chunk)}: {Chunk.ChunkPosition}";
+        }
     }
 
     public sealed class PopulatorWorker : AbstractWorker<PopulateJob> {

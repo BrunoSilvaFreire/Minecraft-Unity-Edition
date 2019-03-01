@@ -7,8 +7,13 @@ using UnityEngine.Events;
 using UnityUtilities;
 
 namespace Minecraft.Scripts.Utility.Multithreading {
-    public abstract class JobSystem<W, T> where W : AbstractWorker<T> where T : Job {
+    public abstract class JobSystem<W, T> where W : AbstractWorker<T> where T : Job<T> {
         private W FindWorker() {
+#if UNITY_EDITOR
+            if (workers == null) {
+                InitializeWorkers();
+            }
+#endif
             var w = workers[lastWorker++];
             if (lastWorker >= TotalWorkers) {
                 lastWorker %= TotalWorkers;
@@ -20,6 +25,8 @@ namespace Minecraft.Scripts.Utility.Multithreading {
         private byte lastWorker;
         private W[] workers;
         public byte TotalWorkers = 2;
+
+        public IEnumerable<W> Workers => workers;
 
         public void Enqueue(T job) {
             FindWorker().Enqueue(job);
@@ -41,31 +48,52 @@ namespace Minecraft.Scripts.Utility.Multithreading {
         }
     }
 
+    public enum JobState {
+        /// <summary>
+        /// Not queued for processing 
+        /// </summary>
+        Idle,
 
-    public abstract class Job {
-        private readonly UnityAction startedCallback;
-        private readonly UnityAction finishedCallback;
+        /// <summary>
+        /// Queued and waiting to be picked up
+        /// </summary>
+        Waiting,
 
-        public Job(UnityAction startedCallback, UnityAction finishedCallback) {
-            this.startedCallback = startedCallback;
-            this.finishedCallback = finishedCallback;
+        /// <summary>
+        /// Currently running
+        /// </summary>
+        Active,
+
+        /// <summary>
+        /// Finished
+        /// </summary>
+        Finished
+    }
+
+
+    public abstract class Job<T> where T : Job<T> {
+        private readonly UnityAction<T, JobState> onJobUpdated;
+        private JobState currentState;
+
+        protected Job(UnityAction<T, JobState> onJobUpdated = null) {
+            this.onJobUpdated = onJobUpdated;
+            currentState = JobState.Idle;
         }
 
-        public void StartedCallback() {
-            startedCallback?.Invoke();
-        }
-
-
-        public void FinishedCallback() {
-            finishedCallback?.Invoke();
+        public void UpdateStatus(JobState newState) {
+            currentState = newState;
+            onJobUpdated?.Invoke((T) this, newState);
         }
     }
 
 
-    public abstract class AbstractWorker<T> where T : Job {
+    public abstract class AbstractWorker<T> where T : Job<T> {
         private readonly AutoResetEvent handle = new AutoResetEvent(false);
         protected readonly List<T> jobQueue = new List<T>();
         private readonly byte id;
+        private T currentJob;
+
+        public T CurrentJob => currentJob;
 
         public AbstractWorker(byte workerId) {
             id = workerId;
@@ -83,20 +111,27 @@ namespace Minecraft.Scripts.Utility.Multithreading {
 
         public void Enqueue(T job) {
             jobQueue.Add(job);
+            job.UpdateStatus(JobState.Waiting);
             handle.Set();
         }
 
-        public sealed override string ToString() => $"Worker #{id}";
+        public sealed override string ToString() => $"{GetType().Name} #{id}";
 
         private void Process() {
             while (!shouldStop) {
                 handle.WaitOne();
                 while (!jobQueue.IsEmpty()) {
-                    var job = Dequeue();
-                    jobQueue.Remove(job);
-                    job.StartedCallback();
-                    Execute(job);
-                    job.FinishedCallback();
+                    currentJob = Dequeue();
+                    jobQueue.Remove(currentJob);
+                    if (currentJob == null) {
+                        continue;
+                    }
+
+                    Debug.Log("Worker " + this + " running job " + currentJob);
+                    currentJob.UpdateStatus(JobState.Active);
+                    Execute(currentJob);
+                    currentJob.UpdateStatus(JobState.Finished);
+                    currentJob = null;
                 }
             }
         }

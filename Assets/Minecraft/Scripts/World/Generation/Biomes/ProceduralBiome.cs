@@ -68,11 +68,26 @@ namespace Minecraft.Scripts.World.Generation.Biomes {
     public sealed class CrustElement {
         public byte Height;
         public Block Block;
+
+        public override string ToString() {
+            return $"{nameof(Height)}: {Height}, {nameof(Block)}: {Block}";
+        }
+    }
+
+    [Serializable]
+    public sealed class CrustOverlayElement {
+        public Block Block;
+        public float Chance;
+
+        public override string ToString() {
+            return $"{nameof(Block)}: {Block}, {nameof(Chance)}: {Chance}";
+        }
     }
 
     [Serializable]
     public sealed class CrustConfig {
         public byte MinimumHeight = 8;
+        public CrustOverlayElement[] CrustOverlay;
         public CrustElement[] CrustElements;
 
         public Block GetCrustBlockFor(byte offsetFromSurface) {
@@ -84,6 +99,20 @@ namespace Minecraft.Scripts.World.Generation.Biomes {
                 } else {
                     return element.Block;
                 }
+            }
+
+            return null;
+        }
+
+        public CrustOverlayElement GetOverlayElement() {
+            var value = ProceduralBiome.Random.NextDouble();
+            float current = 0;
+            foreach (var crustElement in CrustOverlay) {
+                current += crustElement.Chance;
+                if (current > value) {
+                    return crustElement;
+                }
+
             }
 
             return null;
@@ -102,7 +131,7 @@ namespace Minecraft.Scripts.World.Generation.Biomes {
         public SubterraneanConfig Subterrain;
         public float PerlinScale = 5;
         public Block AirBlock;
-        private static readonly Random random = new Random();
+        public static readonly Random Random = new Random();
 
         public override void Populate(World world, ref ChunkData data, Vector2Int chunkPosition) {
             var worldSize = world.ChunkSize;
@@ -118,8 +147,19 @@ namespace Minecraft.Scripts.World.Generation.Biomes {
                     surfaceHeightBuffer[x, z] = height;
                     for (byte y = 0; y < worldHeight; y++) {
                         Block block;
+
+
                         if (y > height) {
-                            block = AirBlock;
+                            if (y != height + 1) {
+                                block = AirBlock;
+                            } else {
+                                var element = Crust.GetOverlayElement();
+                                if (element == null) {
+                                    block = AirBlock;
+                                } else {
+                                    block = element.Block;
+                                }
+                            }
                         } else {
                             var offsetFromSurface = (byte) (height - y);
                             block = Crust.GetCrustBlockFor(offsetFromSurface);
@@ -134,12 +174,12 @@ namespace Minecraft.Scripts.World.Generation.Biomes {
             }
 
             foreach (var oreCluster in Subterrain.Clusters) {
-                while (oreCluster.Probability / 100 > random.NextDouble()) {
-                    var x = random.Next(worldSize);
-                    var z = random.Next(worldSize);
+                while (oreCluster.Probability / 100 > Random.NextDouble()) {
+                    var x = Random.Next(worldSize);
+                    var z = Random.Next(worldSize);
                     var origin = new Vector3Int(
                         x,
-                        random.Next(worldHeight - surfaceHeightBuffer[x, z]),
+                        Random.Next(worldHeight - surfaceHeightBuffer[x, z]),
                         z
                     );
                     oreCluster.Place(world, origin);

@@ -1,10 +1,12 @@
-﻿using Minecraft.Scripts.World.Chunks;
+﻿using Minecraft.Scripts.Utility.Multithreading;
+using Minecraft.Scripts.World.Chunks;
 using UnityEngine;
 
 namespace Minecraft.Scripts.Game {
     public partial class Player {
         public byte ViewDistance = 5;
         public bool AutomaticChunkHandling = true;
+
         private void UpdateWorld() {
             if (CurrentEntity == null || !AutomaticChunkHandling) {
                 return;
@@ -25,7 +27,8 @@ namespace Minecraft.Scripts.Game {
                     var xPos = x + pos.x;
                     var yPos = y + pos.y;
                     var chunk = world.GetChunk(xPos, yPos);
-                    if (!chunk.IsMeshGenerated) {
+                    if (chunk.MeshGenerationStatus == JobState.Idle) {
+                        Debug.Log("Generating " + chunk);
                         chunk.GenerateMesh(world, false);
                     }
                 }
